@@ -138,3 +138,10 @@ QString ThumbItem::GetDescription(const QString &status,
 
     return info;
 }
+
+QString ThumbItem::GetCreationDate(void) const
+{ 
+    QFileInfo fi(GetPath()); 
+    return fi.lastModified().toString("ddd dd.MM.yyyy");
+}
+

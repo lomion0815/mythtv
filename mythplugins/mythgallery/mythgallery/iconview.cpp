@@ -108,7 +108,7 @@ IconView::IconView(MythScreenStack *parent, const char *name,
         : MythScreenType(parent, name),
             m_galleryDir(galleryDir),
             m_galleryFilter(new GalleryFilter()),
-            m_imageList(NULL),
+            m_imageList(NULL), m_creationDate(NULL),
             m_captionText(NULL),    m_crumbsText(NULL),
             m_positionText(NULL),   m_noImagesText(NULL),
             m_selectedImage(NULL),  m_menuPopup(NULL),
@@ -167,6 +167,7 @@ bool IconView::Create(void)
     bool err = false;
     UIUtilE::Assign(this, m_imageList,     "images", &err);
     UIUtilW::Assign(this, m_captionText,   "title");
+    UIUtilW::Assign(this, m_creationDate,   "creationdate");
     UIUtilW::Assign(this, m_noImagesText,  "noimages");
     UIUtilW::Assign(this, m_selectedImage, "selectedimage");
     UIUtilW::Assign(this, m_positionText,  "position");
@@ -403,6 +404,15 @@ void IconView::UpdateText(MythUIButtonListItem *item)
         caption = (caption.isNull()) ? "" : caption;
         m_captionText->SetText(caption);
     }
+
+    if (m_creationDate)
+    {   
+        QString creationDate;
+        creationDate = thumbitem->GetCreationDate();
+        creationDate = (creationDate.isNull()) ? "" : creationDate;
+        m_creationDate->SetText(creationDate);
+    }
+
 }
 
 void IconView::UpdateImage(MythUIButtonListItem *item)

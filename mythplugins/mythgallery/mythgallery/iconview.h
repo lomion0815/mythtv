@@ -123,6 +123,7 @@ class IconView : public MythScreenType
 
     MythUIButtonList   *m_imageList;
     MythUIText         *m_captionText;
+    MythUIText         *m_creationDate;
     MythUIText         *m_crumbsText;
     MythUIText         *m_positionText;
     MythUIText         *m_noImagesText;

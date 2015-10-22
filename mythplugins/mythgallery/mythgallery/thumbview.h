@@ -49,6 +49,7 @@ class ThumbItem
     QString GetName(void)    const { return m_name;               }
     bool    HasCaption(void) const { return !m_caption.trimmed().isEmpty(); }
     QString GetCaption(void) const { return m_caption;            }
+    QString GetCreationDate(void) const;
     QString GetImageFilename(void) const { return m_imageFilename; }
     QString GetPath(void)    const { return m_path;               }
     bool    IsDir(void)      const { return m_isDir;              }
