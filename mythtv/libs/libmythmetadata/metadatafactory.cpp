@@ -87,6 +87,7 @@ void MetadataFactory::Lookup(RecordingRule *recrule, bool automatic,
     lookup->SetHost(gCoreContext->GetMasterHostName());
     lookup->SetTitle(recrule->m_title);
     lookup->SetSubtitle(recrule->m_subtitle);
+    lookup->SetDescription(recrule->m_description);
     lookup->SetInetref(recrule->m_inetref);
     lookup->SetSeason(recrule->m_season);
     lookup->SetEpisode(recrule->m_episode);
@@ -115,6 +116,7 @@ void MetadataFactory::Lookup(ProgramInfo *pginfo, bool automatic,
     lookup->SetHost(gCoreContext->GetMasterHostName());
     lookup->SetTitle(pginfo->GetTitle());
     lookup->SetSubtitle(pginfo->GetSubtitle());
+    lookup->SetDescription(pginfo->GetDescription());
     lookup->SetSeason(pginfo->GetSeason());
     lookup->SetEpisode(pginfo->GetEpisode());
     lookup->SetInetref(pginfo->GetInetRef());

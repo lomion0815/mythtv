@@ -254,6 +254,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
 
     // General Sets - Video
     void SetSubtitle(const QString &subtitle) { m_subtitle = subtitle; };
+    void SetDescription(const QString &description) { m_description = description; };
     void SetSeason(uint season) { m_season = season; };
     void SetEpisode(uint episode) { m_episode = episode; };
     void SetInetref(const QString &inetref) { m_inetref = inetref; };
@@ -385,7 +386,7 @@ class META_PUBLIC MetadataLookup : public QObject, public ReferenceCounter
     // General - Video & ProgramInfo
     QString m_subtitle;
     const QString m_tagline;
-    const QString m_description;
+    QString m_description;
     uint m_season;
     uint m_episode;
     uint m_chanid;

@@ -553,6 +553,11 @@ MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
         MetaGrabberScript::GetGrabber(kGrabberTelevision, lookup);
     bool searchcollection = false;
 
+//Lomion
+    LOG(VB_GENERAL, LOG_INFO,
+        QString("Lookup for Title: (%1) Subtitle: (%2) Description: (%3) Inetref: %4")
+               .arg(lookup->GetTitle()).arg(lookup->GetSubtitle()).arg(lookup->GetDescription()).arg(lookup->GetInetref()));
+
     // initial search mode
     if (!lookup->GetInetref().isEmpty() && lookup->GetInetref() != "00000000" &&
         (lookup->GetStep() == kLookupSearch || lookup->GetStep() == kLookupData))
@@ -564,6 +569,12 @@ MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
             list = grabber.SearchSubtitle(lookup->GetInetref(),
                                           lookup->GetTitle() /* unused */,
                                           lookup->GetSubtitle(), lookup, false);
+        }
+        else if (!lookup->GetDescription().isEmpty())
+        {
+            list = grabber.SearchSubtitle(lookup->GetInetref(),
+                                          lookup->GetTitle() /* unused */,
+                                          lookup->GetDescription(), lookup, false);
         }
 
         if (list.isEmpty() && lookup->GetSeason() && lookup->GetEpisode())
@@ -597,6 +608,11 @@ MetadataLookupList MetadataDownload::handleTelevision(MetadataLookup *lookup)
         {
             list = grabber.SearchSubtitle(lookup->GetTitle(),
                                           lookup->GetSubtitle(), lookup, false);
+        }
+        else if (!lookup->GetDescription().isEmpty())
+        {
+            list = grabber.SearchSubtitle(lookup->GetTitle(),
+                                          lookup->GetDescription(), lookup, false);
         }
         if (list.isEmpty())
         {
@@ -637,8 +653,8 @@ MetadataLookupList MetadataDownload::handleVideoUndetermined(MetadataLookup *loo
 {
     MetadataLookupList list;
 
-    if (lookup->GetSubtype() != kProbableMovie &&
-        !lookup->GetSubtitle().isEmpty())
+    if (lookup->GetSubtype() != kProbableMovie /*&&
+        !lookup->GetSubtitle().isEmpty()*/)
     {
         list.append(handleTelevision(lookup));
     }
