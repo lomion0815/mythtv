@@ -327,7 +327,7 @@ class Recorded( CMPRecord, DBDataWrite ):
     def __init__(self, data=None, db=None):
         if data is not None:
             if None not in data:
-                data = [data[0], datetime.duck(data[1])]
+                data = [data[0], data[1]]
         DBDataWrite.__init__(self, data, db)
 
     def _postinit(self):
@@ -567,7 +567,7 @@ class RecordedProgram( CMPRecord, DBDataWrite ):
     def __init__(self, data=None, db=None):
         if data is not None:
             if None not in data:
-                data = [data[0], datetime.duck(data[1])]
+                data = [data[0], data[1]]
         DBDataWrite.__init__(self, data, db)
 
     def _postinit(self):
@@ -605,7 +605,7 @@ class OldRecorded( CMPRecord, DBDataWrite, RECSTATUS ):
     def __init__(self, data=None, db=None):
         if data is not None:
             if None not in data:
-                data = [data[0], datetime.duck(data[1])]
+                data = [data[0], data[1]]
         DBDataWrite.__init__(self, data, db)
         if self.future:
             raise MythDBError(MythError.DB_RESTRICT, "'future' OldRecorded " +\
