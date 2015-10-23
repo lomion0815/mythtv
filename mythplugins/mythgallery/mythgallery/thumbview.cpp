@@ -125,6 +125,7 @@ QString ThumbItem::GetDescription(const QString &status,
         info += status;
 
     info += "\n\n" + tr("Folder: %1").arg(fi.dir().dirName());
+    info += "\n" + tr("Filename: %1").arg(fi.completeBaseName());
     //: %1 is the creation date
     info += "\n" + tr("Created: %1").arg(fi.created().toString());
     //: %1 is the modification date
