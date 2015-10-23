@@ -330,6 +330,7 @@ void ThumbGenerator::loadFile(QImage& image, const QFileInfo& fi)
     }
     else
     {
+        long rotateAngle = 0;
 #ifdef EXIF_SUPPORT
         // Try to get thumbnail from exif data
         ExifData *ed = exif_data_new_from_file(fi.absoluteFilePath()
@@ -337,6 +338,13 @@ void ThumbGenerator::loadFile(QImage& image, const QFileInfo& fi)
         if (ed && ed->data)
         {
             image.loadFromData(ed->data, ed->size);
+            rotateAngle = GalleryUtil::GetNaturalRotation(fi.absoluteFilePath().toLocal8Bit().constData());
+            if (rotateAngle != 0)
+            {
+                QMatrix matrix;
+                matrix.rotate(rotateAngle);
+                image = image.transformed(matrix);
+            }
         }
 
         if (ed)
@@ -349,7 +357,6 @@ void ThumbGenerator::loadFile(QImage& image, const QFileInfo& fi)
 #ifdef DCRAW_SUPPORT
         QString extension = fi.suffix();
         QSet<QString> dcrawFormats = DcrawFormats::getFormats();
-        int rotateAngle;
 
         if (dcrawFormats.contains(extension) &&
             (rotateAngle = DcrawHandler::loadThumbnail(&image,
@@ -367,7 +374,13 @@ void ThumbGenerator::loadFile(QImage& image, const QFileInfo& fi)
         }
 #endif
 
-        image.load(fi.absoluteFilePath());
+        image.load(fi.absoluteFilePath()); 
+        if (rotateAngle != 0)
+        {
+            QMatrix matrix;
+            matrix.rotate(rotateAngle);
+            image = image.transformed(matrix);
+       }    
     }
 }
 
