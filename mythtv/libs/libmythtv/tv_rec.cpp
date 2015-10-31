@@ -3752,7 +3752,15 @@ void TVRec::TuningFrequency(const TuningRequest &request)
 
         if (request.minorChan && (tuningmode == "atsc"))
         {
-            channel->SetChannelByString(request.channel);
+            if (!channel->SetChannelByString(request.channel)&& scanner && (request.flags & kFlagEITScan) && HasFlags(kFlagEITScannerRunning))
+            {
+                //scanner->StopPassiveScan();
+		LOG(VB_RECORD, LOG_INFO, LOC + "Lomion: StopActiveScan");
+                scanner->StopActiveScan();
+//                ClearFlags(kFlagEITScannerRunning);
+                eitScanStartTime = eitScanStartTime.addSecs(eitCrawlIdleStart +
+                eit_start_rand(cardid, eitTransportTimeout));
+            }
 
             ATSCStreamData *atsc = dynamic_cast<ATSCStreamData*>(mpeg);
             if (atsc)
@@ -3760,7 +3768,15 @@ void TVRec::TuningFrequency(const TuningRequest &request)
         }
         else if (request.progNum >= 0)
         {
-            channel->SetChannelByString(request.channel);
+            if (!channel->SetChannelByString(request.channel)&& scanner && (request.flags & kFlagEITScan) && HasFlags(kFlagEITScannerRunning))
+            {
+                //scanner->StopPassiveScan();
+		LOG(VB_RECORD, LOG_INFO, LOC + "Lomion: StopActiveScan");
+                scanner->StopActiveScan();
+//                ClearFlags(kFlagEITScannerRunning); eitScanStartTime = MythDate::current();
+                eitScanStartTime = eitScanStartTime.addSecs(eitCrawlIdleStart +
+                eit_start_rand(cardid, eitTransportTimeout));
+            }
 
             if (mpeg)
                 mpeg->SetDesiredProgram(request.progNum);
