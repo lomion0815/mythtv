@@ -129,6 +129,8 @@ static int comp_recordDate_rev(const ProgramInfo *a, const ProgramInfo *b)
 
 static int comp_season(const ProgramInfo *a, const ProgramInfo *b)
 {
+    if ((a->GetSeason()==0&&a->GetEpisode()==0)||(b->GetSeason()==0&&b->GetEpisode()==0))
+        return comp_recordDate(a,b);
     if (a->GetSeason() == b->GetSeason())
         return (a->GetEpisode() <
                 b->GetEpisode() ? 1 : -1);
@@ -139,6 +141,8 @@ static int comp_season(const ProgramInfo *a, const ProgramInfo *b)
 
 static int comp_season_rev(const ProgramInfo *a, const ProgramInfo *b)
 {
+    if ((a->GetSeason()==0&&a->GetEpisode()==0)||(b->GetSeason()==0&&b->GetEpisode()==0))
+        return comp_recordDate_rev(a,b);
     if (a->GetSeason() == b->GetSeason())
         return (a->GetEpisode() >
                 b->GetEpisode() ? 1 : -1);
