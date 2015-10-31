@@ -2256,10 +2256,24 @@ void FilterOptMixin::Load(void)
 
         if (query.exec())
         {
+            QString description;
             while (query.next())
             {
-                m_descriptions << QObject::tr(query.value(1).toString()
-                                              .toUtf8().constData());
+/*                m_descriptions << QObject::tr(query.value(1).toString()
+                                              .toUtf8().constData());*/
+                description = query.value(1).toString()
+                                             .toUtf8().constData();
+                if(description == "New episode") m_descriptions << QObject::tr("New episode");
+                else if(description == "Identifiable episode") m_descriptions << QObject::tr("Identifiable episode");
+                else if(description == "First showing") m_descriptions << QObject::tr("First showing");
+                else if(description == "Prime time") m_descriptions <<  QObject::tr("Prime time");
+                else if(description == "Commercial free") m_descriptions << QObject::tr("Commercial free");
+                else if(description == "High definition") m_descriptions << QObject::tr("High definition");
+                else if(description == "This episode") m_descriptions << QObject::tr("This episode");
+                else if(description == "This series") m_descriptions << QObject::tr("This series");
+                else if(description == "This time") m_descriptions << QObject::tr("This time");
+                else if(description == "This day and time") m_descriptions <<  QObject::tr("This day and time");
+                else if(description == "This channel") m_descriptions << QObject::tr("This channel");
             }
         }
         m_loaded = true;
