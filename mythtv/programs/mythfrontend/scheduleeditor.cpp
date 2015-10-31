@@ -96,6 +96,7 @@ ScheduleEditor::ScheduleEditor(MythScreenStack *parent,
             m_player(player), m_loaded(false), m_view(kMainView), m_child(NULL)
 {
     m_recordingRule = new RecordingRule();
+    m_recInfo->SetRecordingRuleID(recInfo->getRecordID());
     m_recordingRule->m_recordID = m_recInfo->GetRecordingRuleID();
     SchedOptMixin::SetRule(m_recordingRule);
     FilterOptMixin::SetRule(m_recordingRule);
