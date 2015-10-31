@@ -30,6 +30,14 @@ class ImageProperties
     ImageProperties &operator=(const ImageProperties &other);
 
     void SetMaskImage(MythImage *image);
+	void SetMaskImageFilename(const QString &filename)
+	{
+		maskImageFilename=filename;
+	}
+	QString GetMaskImageFilename()
+	{
+		return maskImageFilename;
+	}
     QRect GetMaskImageRect(void)
     {
         QRect rect;
@@ -68,6 +76,7 @@ class ImageProperties
     void Copy(const ImageProperties &other);
 
     MythImage *maskImage;
+	QString maskImageFilename;
 };
 
 typedef QPair<MythImage *, int> AnimationFrame;
