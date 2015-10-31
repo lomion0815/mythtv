@@ -435,21 +435,27 @@ void ScheduleCommon::customEvent(QEvent *event)
                     if (recInfo.GetRecordingStartTime() < MythDate::current())
                         recInfo.ReactivateRecording();
                 }
+		EditScheduled(&recInfo);
             }
             else if (resulttext == tr("Record all showings"))
+            {
                 recInfo.ApplyRecordStateChange(kAllRecord);
+		EditScheduled(&recInfo);
+            }
             else if (resulttext == tr("Record one showing (this episode)") ||
                      resulttext == tr("Record one showing"))
             {
                 recInfo.ApplyRecordStateChange(kOneRecord, false);
                 recInfo.GetRecordingRule()->m_filter |= 64; // This episode
                 recInfo.GetRecordingRule()->Save();
+		EditScheduled(&recInfo);
             }
             else if (resulttext == tr("Record all showings (this channel)"))
             {
                 recInfo.ApplyRecordStateChange(kAllRecord, false);
                 recInfo.GetRecordingRule()->m_filter |= 1024; // This channel
                 recInfo.GetRecordingRule()->Save();
+		EditScheduled(&recInfo);
             }
             else if (resulttext == tr("Stop this recording"))
             {
