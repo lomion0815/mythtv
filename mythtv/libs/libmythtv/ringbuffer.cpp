@@ -33,10 +33,10 @@
 #include "HLS/httplivestreambuffer.h"
 
 // about one second at 35mbit
-#define BUFFER_SIZE_MINIMUM 4 * 1024 * 1024
-#define BUFFER_FACTOR_NETWORK  2
-#define BUFFER_FACTOR_BITRATE  2
-#define BUFFER_FACTOR_MATROSKA 2
+#define BUFFER_SIZE_MINIMUM 12 * 1024 * 1024
+#define BUFFER_FACTOR_NETWORK  1
+#define BUFFER_FACTOR_BITRATE  1
+#define BUFFER_FACTOR_MATROSKA 1
 
 const int  RingBuffer::kDefaultOpenTimeout = 2000; // ms
 const int  RingBuffer::kLiveTVOpenTimeout  = 10000;
