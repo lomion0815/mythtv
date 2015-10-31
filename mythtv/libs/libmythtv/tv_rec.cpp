@@ -1415,9 +1415,26 @@ void TVRec::run(void)
             }
             else
             {
-                scanner->StartActiveScan(this, eitTransportTimeout);
-                SetFlags(kFlagEITScannerRunning);
-                eitScanStartTime = MythDate::current().addYears(1);
+                // We check if another card in the same input group is busy since it could be either virtual DVB-devices or a second tuner on a single card
+                bool scanning_possible = true;
+                vector<uint> inputids = CardUtil::GetInputIDs(cardid);
+                for (uint j = 0; j < inputids.size() ; j++)
+                {
+                    vector<uint> cardids = CardUtil::GetConflictingCards(inputids[j], cardid);
+                    for (uint i = 0; i < cardids.size() && scanning_possible; i++)
+                    {
+                        TunedInputInfo busy_input;
+                        scanning_possible = !RemoteIsBusy(cardids[i], busy_input);
+                    }
+                }
+                if(scanning_possible)
+                {
+                    scanner->StartActiveScan(this, eitTransportTimeout);
+                    SetFlags(kFlagEITScannerRunning);
+                    eitScanStartTime = QDateTime::currentDateTime().addYears(1);
+                }
+                else
+                    eitScanStartTime = eitScanStartTime.addSecs(60);
             }
         }
 
