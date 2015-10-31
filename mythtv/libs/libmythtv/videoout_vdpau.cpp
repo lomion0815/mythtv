@@ -15,7 +15,7 @@
 #define MAX_REFERENCE_FRAMES 16
 #define MIN_PROCESS_BUFFER   6
 #define MAX_PROCESS_BUFFER   50
-#define DEF_PROCESS_BUFFER   12
+#define DEF_PROCESS_BUFFER   42
 
 #define CHECK_ERROR(Loc) \
   if (m_render && m_render->IsErrored()) \
