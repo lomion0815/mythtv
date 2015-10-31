@@ -1094,25 +1094,81 @@ static void init_fixup(QMap<uint64_t,uint> &fix)
     // MultiChoice Africa
     fix[ 6144U << 16] = EITFixUp::kFixMCA;
 
-    // RTL Subtitle parsing
-    fix[      1089LL << 32 |     1  << 16] = // DVB-S
-        fix[   773LL << 32 |  8468U << 16] = // DVB-T Berlin/Brandenburg
-        fix[  2819LL << 32 |  8468U << 16] = // DVB-T Niedersachsen + Bremen
-        fix[  8706LL << 32 |  8468U << 16] = // DVB-T NRW
-        fix[ 12801LL << 32 |  8468U << 16] = // DVB-T Bayern
-        EITFixUp::kFixRTL | EITFixUp::kFixCategory;
+     // RTL Subtitle parsing
+     fix[      1089LL << 32 |     1  << 16] = // DVB-S
+    fix[ 1057LL << 32 | 1 << 16] = // DVB-S RTL Group HD Transponder
+     fix[ 1041LL << 32 | 1 << 16] = // DVB-S RTL Group HD Austria Transponder
+         fix[   773LL << 32 |  8468U << 16] = // DVB-T Berlin/Brandenburg
+         fix[  2819LL << 32 |  8468U << 16] = // DVB-T Niedersachsen + Bremen
+         fix[  8706LL << 32 |  8468U << 16] = // DVB-T NRW
+         fix[ 12801LL << 32 |  8468U << 16] = // DVB-T Bayern
+         EITFixUp::kFixRTL | EITFixUp::kFixCategory;
 
-    // Premiere EIT processing
-    fix[   1LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
-    fix[   2LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
-    fix[   3LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
-    fix[   4LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
-    fix[   5LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
-    fix[   6LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
-    fix[  17LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
-    // Mark Premiere HD and Discovery HD as HDTV
-    fix[   6LL << 32 |  133 << 16 | 129] = EITFixUp::kFixHDTV;
-    fix[   6LL << 32 |  133 << 16 | 130] = EITFixUp::kFixHDTV;
+    // Mark EITpf support
+	fix[   1003LL << 32 |  1 << 16 | 13221] = // ORF Sport+
+	fix[   1005LL << 32 |  1 << 16 | 13308] = // ORF III HD
+	fix[   1005LL << 32 |  1 << 16 | 13309] = // ORF Sport+ HD
+	fix[   1007LL << 32 |  1 << 16 ] = // ORF 1 HD, ORF 2 HD, Servus TV HD, ORF 2N HD
+	fix[   1115LL << 32 |  1 << 16 | 13101] = // ORF III
+	fix[   1117LL << 32 |  1 << 16 | 13001] = // ORF 1
+	fix[   1117LL << 32 |  1 << 16 | 13002] = // ORF 2
+        fix[   1019LL << 32 |  1 << 16 | 10301] = // Das Erste HD
+        fix[   1101LL << 32 |  1 << 16 | 28106] = // Das Erste
+        fix[   1010LL << 32 |  1 << 16 ] = // 3Sat HD, KiKa HD, ZDFinfo HD
+        fix[   1019LL << 32 |  1 << 16 | 10302] = // ARTE HD
+	EITFixUp::kFixEITpf;
+
+    // Mark HD+ channels as HDTV
+    fix[   1057LL << 32 |  1 << 16] = EITFixUp::kFixHDTV;
+    fix[   1055LL << 32 |  1 << 16] = EITFixUp::kFixHDTV;
+    fix[   1041LL << 32 |  1 << 16] = EITFixUp::kFixHDTV;
+    fix[   1109LL << 32 |  1 << 16] = EITFixUp::kFixHDTV;
+
+    // PRO7/SAT.1
+    fix[   1017LL << 32 |  1 << 16] = EITFixUp::kFixHDTV | EITFixUp::kFixP7S1;
+    fix[   1107LL << 32 |  1 << 16] = EITFixUp::kFixP7S1;
+    fix[   1031LL << 32 |  1 << 16 | 5300] = EITFixUp::kFixHDTV | EITFixUp::kFixP7S1;
+    fix[   1031LL << 32 |  1 << 16 | 5301] = EITFixUp::kFixHDTV | EITFixUp::kFixP7S1;
+    fix[   1031LL << 32 |  1 << 16 | 5302] = EITFixUp::kFixHDTV | EITFixUp::kFixP7S1;
+    fix[   1031LL << 32 |  1 << 16 | 5303] = EITFixUp::kFixHDTV | EITFixUp::kFixP7S1;
+    fix[   1031LL << 32 |  1 << 16 | 5310] = EITFixUp::kFixP7S1;
+    fix[   1031LL << 32 |  1 << 16 | 5311] = EITFixUp::kFixP7S1;
+    fix[   1082LL << 32 |  1 << 16] = EITFixUp::kFixP7S1;
+    fix[   5LL << 32 |  133 << 16 | 776] = EITFixUp::kFixP7S1;
+
+	// ATV / ATV2
+    fix[   1117LL << 32 |  1 << 16 | 13012 ] = EITFixUp::kFixATV; // ATV
+	fix[   1003LL << 32 |  1 << 16 | 13223 ] = EITFixUp::kFixATV; // ATV2
+	fix[   1003LL << 32 |  1 << 16 | 13228 ] = EITFixUp::kFixHDTV | EITFixUp::kFixATV; // ATV HD
+	
+	// Disney Channel Germany
+	fix[   1055LL << 32 |  1 << 16 | 5500 ] = EITFixUp::kFixHDTV | EITFixUp::kFixDisneyChannel; // Disney Channel HD
+	fix[   1055LL << 32 |  1 << 16 | 5510 ] = EITFixUp::kFixHDTV | EITFixUp::kFixDisneyChannel; // Disney Channel HD Austria
+	fix[   5LL << 32 |  133 << 16 | 1793 ] = EITFixUp::kFixDisneyChannel; // Disney Channel HD Austria
+	fix[   1109LL << 32 |  1 << 16 | 5401 ] = EITFixUp::kFixHDTV | EITFixUp::kFixDisneyChannel; // Tele 5 HD
+	fix[   1109LL << 32 |  1 << 16 | 5421 ] = EITFixUp::kFixHDTV | EITFixUp::kFixDisneyChannel; // Tele 5 HD Austria
+	fix[   33LL << 32 |  133 << 16 | 51 ] = EITFixUp::kFixDisneyChannel; // Tele 5
+
+	
+     // Premiere EIT processing
+     fix[   1LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+     fix[   2LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+     fix[   3LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+     fix[   4LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+     fix[   6LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    fix[   8LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    fix[  10LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    fix[  11LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    fix[  12LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    fix[  13LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    fix[  14LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    fix[  15LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+     fix[  17LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
+    // Mark Premiere HD, AXN HD and Discovery HD as HDTV
+     fix[   6LL << 32 |  133 << 16 | 129] = EITFixUp::kFixHDTV;
+     fix[   6LL << 32 |  133 << 16 | 130] = EITFixUp::kFixHDTV;
+    fix[  10LL << 32 |  133 << 16 | 125] = EITFixUp::kFixHDTV;
+
 
     // Netherlands DVB-C
     fix[ 1000U << 16] = EITFixUp::kFixNL;

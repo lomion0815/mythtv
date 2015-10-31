@@ -63,6 +63,11 @@ class EITFixUp
         kEFixForceISO8859_15 = 0x4000,
         kEFixForceISO8859_9  = 0x80000,
         kEFixForceISO8859_2  = 0x100000,
+//Lomion
+	kFixP7S1             = 0x1000000,
+	kFixATV             = 0x2000000,
+	kFixDisneyChannel             = 0x4000000,
+        kFixEITpf           = 0x8000000,
     };
 
     EITFixUp();
@@ -96,6 +101,9 @@ class EITFixUp
     void FixAUDescription(DBEventEIT &event) const;
     void FixMCA(DBEventEIT &event) const;           // MultiChoice Africa DVB-S
     void FixRTL(DBEventEIT &event) const;           // RTL group DVB
+    void FixPRO7(DBEventEIT &event) const;          // Pro7/Sat1 group
+	void FixATV(DBEventEIT &event) const;          // ATV/ATV2
+	void FixDisneyChannel(DBEventEIT &event) const; // Disney Channel
     void FixFI(DBEventEIT &event) const;            // Finland DVB-T
     void FixPremiere(DBEventEIT &event) const;      // german pay-tv Premiere
     void FixNL(DBEventEIT &event) const;            // Netherlands DVB-C
@@ -183,6 +191,9 @@ class EITFixUp
     const QRegExp m_RTLSubtitle3;
     const QRegExp m_RTLSubtitle4;
     const QRegExp m_RTLSubtitle5;
+    const QRegExp m_PRO7Subtitle;
+	const QRegExp m_ATVSubtitle;
+	const QRegExp m_DisneyChannelSubtitle;
     const QRegExp m_RTLEpisodeNo1;
     const QRegExp m_RTLEpisodeNo2;
     const QRegExp m_fiRerun;
