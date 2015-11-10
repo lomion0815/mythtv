@@ -1165,9 +1165,9 @@ static void init_fixup(QMap<uint64_t,uint> &fix)
     fix[  15LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
      fix[  17LL << 32 |  133 << 16] = EITFixUp::kFixPremiere;
     // Mark Premiere HD, AXN HD and Discovery HD as HDTV
-     fix[   6LL << 32 |  133 << 16 | 129] = EITFixUp::kFixHDTV;
-     fix[   6LL << 32 |  133 << 16 | 130] = EITFixUp::kFixHDTV;
-    fix[  10LL << 32 |  133 << 16 | 125] = EITFixUp::kFixHDTV;
+     fix[   6LL << 32 |  133 << 16 | 129] |= EITFixUp::kFixHDTV;
+     fix[   6LL << 32 |  133 << 16 | 130] |= EITFixUp::kFixHDTV;
+    fix[  10LL << 32 |  133 << 16 | 125] |= EITFixUp::kFixHDTV;
 
 
     // Netherlands DVB-C
