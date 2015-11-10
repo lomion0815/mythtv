@@ -105,6 +105,7 @@ EITFixUp::EITFixUp()
       m_dePremiereInfos("([^.]+)?\\s?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon"
                         "\\s([^,]+)(?:,|\\su\\.\\sa\\.)\\smit\\s(.+)\\.)?"),
       m_dePremiereOTitle("\\s*\\(([^\\)]*)\\)$"),
+      m_deSkyDescriptionSeasonEpisode("^(\\d{1,2}).\\sStaffel,\\sFolge\\s(\\d{1,2}):\\s"),
       m_nlTxt("txt"),
       m_nlWide("breedbeeld"),
       m_nlRepeat("herh."),
@@ -1689,6 +1690,15 @@ void EITFixUp::FixPremiere(DBEventEIT &event) const
     {
         event.subtitle = QString("%1, %2").arg(tmpOTitle.cap(1)).arg(country);
         event.title = event.title.replace(tmpOTitle.cap(0), "");
+    }
+
+    // Find infos about Season and Episoe number 
+    QRegExp tmpSeasonEpisode =  m_deSkyDescriptionSeasonEpisode; 
+    if (tmpSeasonEpisode.indexIn(event.description) != -1) 
+    { 
+        event.syndicatedepisodenumber = QString('S' + tmpSeasonEpisode.cap(1).trimmed()); 
+        event.syndicatedepisodenumber.append(QString('E' + tmpSeasonEpisode.cap(2).trimmed())); 
+        event.description.replace(tmpSeasonEpisode, "");
     }
 }
 
