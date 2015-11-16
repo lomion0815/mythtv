@@ -258,6 +258,17 @@ void TestEITFixups::testSkyEpisodes()
     QCOMPARE(event2->description, QString("Washington, 1971: Vor dem Obersten Gerichtshof wird über die Kriegsdienstverweigerung von Box-Ikone Cassius Clay aka Muhammad Ali verhandelt. Während draußen Tausende gegen den Vietnamkrieg protestieren, verteidigen acht weiße, alte Bundesrichter unter dem Vorsitzenden Warren Burger (Frank Langella) die harte Linie der Regierung Nixon. Doch Kevin Connolly (Benjamin Walker), ein idealistischer junger Mitarbeiter von Richter Harlan (Christopher Plummer), gibt nicht auf. - Muhammad Alis Kiegsdienst-Verweigerungsprozess, als Mix aus Kammerspiel und Archivaufnahmen starbesetzt verfilmt. 94 Min. USA 2012. Von Stephen Frears, mit Danny Glover, Barry Levinson, Bob Balaban. Ab 12 Jahren"));
     QCOMPARE(event2->syndicatedepisodenumber,  QString(""));
 
+    DBEventEIT *event3 = SimpleDBEventEIT (EITFixUp::kFixPremiere,
+                                         "Titel",
+                                         "Subtitle",
+                                         "50 Min. USA 2008. Von Leslie Libman, mit Rob Morrow, David Krumholtz, Judd Hirsch. Ab 12 Jahren");
+
+    PRINT_EVENT(*event3);
+    fixup.Fix(*event3);
+    PRINT_EVENT(*event3);
+    QCOMPARE(event3->description, QString("50 Min. USA 2008. Von Leslie Libman, mit Rob Morrow, David Krumholtz, Judd Hirsch. Ab 12 Jahren"));
+    QCOMPARE(event3->syndicatedepisodenumber,  QString(""));
+
 }
 
 QTEST_APPLESS_MAIN(TestEITFixups)
