@@ -299,12 +299,19 @@ void MusicPlayer::stop(bool stopAll)
     gCoreContext->emitTVPlaybackStopped();
 
     GetMythMainWindow()->PauseIdleTimer(false);
+
+    GetMythUI()->RestoreScreensaver();
+
 }
 
 void MusicPlayer::pause(void)
 {
     if (m_output)
     {
+        if(m_isPlaying)
+            GetMythUI()->RestoreScreensaver();
+        else
+            GetMythUI()->DisableScreensaver();
         m_isPlaying = !m_isPlaying;
         m_output->Pause(!m_isPlaying);
     }
@@ -342,6 +349,9 @@ void MusicPlayer::play(void)
     getDecoderHandler()->start(meta);
 
     GetMythMainWindow()->PauseIdleTimer(true);
+
+    GetMythUI()->DisableScreensaver();
+
 }
 
 void MusicPlayer::stopDecoder(void)
