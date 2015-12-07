@@ -124,7 +124,22 @@ RecordingInfo::RecordingInfo(
     hostname = _hostname;
     storagegroup = _storagegroup;
 
+    season = _season;
+    episode = _episode;
     syndicatedepisode = _syndicatedepisode;
+    if (!syndicatedepisode.isEmpty())
+    {
+        QRegExp tmpSeason = QRegExp("S(\\d{1,2})");
+        if (tmpSeason.indexIn(syndicatedepisode) != -1)
+        {
+            season=tmpSeason.cap(1).trimmed().toUInt();
+        }
+        QRegExp tmpEpisode = QRegExp("E(\\d{1,2})");
+        if (tmpEpisode.indexIn(syndicatedepisode) != -1)
+        {
+            episode=tmpEpisode.cap(1).trimmed().toUInt();
+        }
+    }
 
     year = _year;
     partnumber = _partnumber;
@@ -224,6 +239,9 @@ RecordingInfo::RecordingInfo(
     recpriority = _recpriority;
 
     recstatus = _recstatus,
+
+    season = _season;
+    episode = _episode;
 
     recordid = _recordid;
     rectype = _rectype;
