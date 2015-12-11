@@ -105,8 +105,8 @@ EITFixUp::EITFixUp()
 //      m_dePremiereInfos("([^.]+)?\\s?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon"
 //      m_dePremiereInfos("\\s*[0-9]+\\sMin\\.([^.]+)?\\s?([0-9]{4})\\.(?:\\sVon"
 //                        "\\s([^,]+)(?:,|\\su\\.\\sa\\.)\\smit\\s(.+)\\.)?\\n"),
-      m_dePremiereInfos("[0-9]+\\sMin\\.(?:\\x000a)?([^.]+)\\s([0-9]{4})\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
-      m_dePremiereInfos2("(?:\\x000a)?(?:([^.]+)\\s)?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
+      m_dePremiereInfos("[0-9]+\\sMin\\.(?:\\x000a)?([^.]*)\\s([0-9]{4})\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
+      m_dePremiereInfos2("(?:\\x000a)?(?:([^.]*)\\s)?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
       m_dePremiereOTitle("\\s*\\(([^\\)]*)\\)$"),
       m_deSkyDescriptionSeasonEpisode("^(\\d{1,2}).\\sStaffel,\\sFolge\\s(\\d{1,2}):\\s"),
       m_nlTxt("txt"),

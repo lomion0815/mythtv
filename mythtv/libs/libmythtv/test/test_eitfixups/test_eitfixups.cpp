@@ -288,6 +288,19 @@ void TestEITFixups::testSkyEpisodes()
     QCOMPARE(event4->airdate,  (unsigned short) 1999);
 	QVERIFY(event4->HasCredits());
 
+    DBEventEIT *event5 = SimpleDBEventEIT (EITFixUp::kFixPremiere,
+                                         "Titel",
+                                         "Subtitle",
+                                         "2. Staffel, Folge 24: Folge 14.Wenn der Ehrgeiz ...blabla... Spektakuläre Szenen, bei denen niemand Schaden nimmt. 28 Min.\u000a2015.");
+
+    PRINT_EVENT(*event5);
+    fixup.Fix(*event5);
+    PRINT_EVENT(*event5);
+    QCOMPARE(event5->description, QString("Folge 14.Wenn der Ehrgeiz ...blabla... Spektakuläre Szenen, bei denen niemand Schaden nimmt."));
+    QCOMPARE(event5->syndicatedepisodenumber,  QString("S2E24"));
+    QCOMPARE(event5->airdate,  (unsigned short) 2015);
+	QVERIFY(!event5->HasCredits());
+
 }
 
 QTEST_APPLESS_MAIN(TestEITFixups)
