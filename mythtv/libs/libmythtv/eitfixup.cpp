@@ -102,8 +102,11 @@ EITFixUp::EITFixUp()
       m_RTLEpisodeNo2("^(\\d{1,2}\\/[IVX]+)\\.*\\s*"),
       m_fiRerun("\\ ?Uusinta[a-zA-Z\\ ]*\\.?"),
       m_fiRerun2("\\([Uu]\\)"),
-      m_dePremiereInfos("([^.]+)?\\s?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon"
-                        "\\s([^,]+)(?:,|\\su\\.\\sa\\.)\\smit\\s(.+)\\.)?"),
+//      m_dePremiereInfos("([^.]+)?\\s?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon"
+//      m_dePremiereInfos("\\s*[0-9]+\\sMin\\.([^.]+)?\\s?([0-9]{4})\\.(?:\\sVon"
+//                        "\\s([^,]+)(?:,|\\su\\.\\sa\\.)\\smit\\s(.+)\\.)?\\n"),
+      m_dePremiereInfos("[0-9]+\\sMin\\.(?:\\x000a)?([^.]+)\\s([0-9]{4})\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
+      m_dePremiereInfos2("(?:\\x000a)?(?:([^.]+)\\s)?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
       m_dePremiereOTitle("\\s*\\(([^\\)]*)\\)$"),
       m_deSkyDescriptionSeasonEpisode("^(\\d{1,2}).\\sStaffel,\\sFolge\\s(\\d{1,2}):\\s"),
       m_nlTxt("txt"),
@@ -1675,14 +1678,38 @@ void EITFixUp::FixPremiere(DBEventEIT &event) const
         uint y = tmpInfos.cap(2).toUInt(&ok);
         if (ok)
             event.airdate = y;
-        event.AddPerson(DBPerson::kDirector, tmpInfos.cap(3));
-        const QStringList actors = tmpInfos.cap(4).split(
-            ", ", QString::SkipEmptyParts);
-        QStringList::const_iterator it = actors.begin();
-        for (; it != actors.end(); ++it)
-            event.AddPerson(DBPerson::kActor, *it);
+        if(!tmpInfos.cap(3).isEmpty())
+            event.AddPerson(DBPerson::kDirector, tmpInfos.cap(3));
+        if(!tmpInfos.cap(4).isEmpty())
+        {
+            const QStringList actors = tmpInfos.cap(4).split(
+                ", ", QString::SkipEmptyParts);
+            QStringList::const_iterator it = actors.begin();
+            for (; it != actors.end(); ++it)
+                event.AddPerson(DBPerson::kActor, *it);
+        }
         event.description = event.description.replace(tmpInfos.cap(0), "");
     }
+    tmpInfos =  m_dePremiereInfos2;
+    if (tmpInfos.indexIn(event.description) != -1)
+    {
+        country = tmpInfos.cap(1).trimmed();
+        bool ok;
+        uint y = tmpInfos.cap(2).toUInt(&ok);
+        if (ok)
+            event.airdate = y;
+        if(!tmpInfos.cap(3).isEmpty())
+            event.AddPerson(DBPerson::kDirector, tmpInfos.cap(3));
+        if(!tmpInfos.cap(4).isEmpty())
+        {
+            const QStringList actors = tmpInfos.cap(4).split(
+                ", ", QString::SkipEmptyParts);
+            QStringList::const_iterator it = actors.begin();
+            for (; it != actors.end(); ++it)
+                event.AddPerson(DBPerson::kActor, *it);
+        }
+        event.description = event.description.replace(tmpInfos.cap(0), "");
+    }    
 
     // move the original titel from the title to subtitle
     QRegExp tmpOTitle = m_dePremiereOTitle;
@@ -1692,7 +1719,7 @@ void EITFixUp::FixPremiere(DBEventEIT &event) const
         event.title = event.title.replace(tmpOTitle.cap(0), "");
     }
 
-    // Find infos about Season and Episoe number 
+    // Find infos about Season and Episode number 
     QRegExp tmpSeasonEpisode =  m_deSkyDescriptionSeasonEpisode; 
     if (tmpSeasonEpisode.indexIn(event.description) != -1) 
     { 

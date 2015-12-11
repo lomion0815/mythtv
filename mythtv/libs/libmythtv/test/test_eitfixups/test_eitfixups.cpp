@@ -239,35 +239,54 @@ void TestEITFixups::testSkyEpisodes()
     DBEventEIT *event = SimpleDBEventEIT (EITFixUp::kFixPremiere,
                                          "Titel",
                                          "Subtitle",
-                                         "4. Staffel, Folge 16: Viele Mitglieder einer christlichen Gemeinde erkranken nach einem Giftanschlag tödlich. Doch die fanatisch Gläubigen lassen weder polizeiliche, noch ärztliche Hilfe zu. Don (Rob Morrow) und Charlie (David Krumholtz) gelingt es jedoch durch einen Nebeneingang ins Gebäude zu kommen. Bei ihren Ermittlungen finden sie heraus, dass der Anführer der Sekte ein Betrüger war. Auch sein Sohn wusste von den Machenschaften des Vaters. War der Giftanschlag ein Racheakt? 50 Min. USA 2008. Von Leslie Libman, mit Rob Morrow, David Krumholtz, Judd Hirsch. Ab 12 Jahren");
+                                         "1. Staffel, Folge 7: Während Barbies Junggesellinnenabschieds in Miami streiten sich Nicole und Barbie wegen eines Abstechers in eine Stripbar.\u000aUSA 2015. 50 Min.");
 
     PRINT_EVENT(*event);
     fixup.Fix(*event);
     PRINT_EVENT(*event);
-    QCOMPARE(event->description, QString("Viele Mitglieder einer christlichen Gemeinde erkranken nach einem Giftanschlag tödlich. Doch die fanatisch Gläubigen lassen weder polizeiliche, noch ärztliche Hilfe zu. Don (Rob Morrow) und Charlie (David Krumholtz) gelingt es jedoch durch einen Nebeneingang ins Gebäude zu kommen. Bei ihren Ermittlungen finden sie heraus, dass der Anführer der Sekte ein Betrüger war. Auch sein Sohn wusste von den Machenschaften des Vaters. War der Giftanschlag ein Racheakt? 50 Min. USA 2008. Von Leslie Libman, mit Rob Morrow, David Krumholtz, Judd Hirsch. Ab 12 Jahren"));
-    QCOMPARE(event->syndicatedepisodenumber,  QString("S4E16"));
+    QCOMPARE(event->description, QString("Während Barbies Junggesellinnenabschieds in Miami streiten sich Nicole und Barbie wegen eines Abstechers in eine Stripbar."));
+    QCOMPARE(event->syndicatedepisodenumber,  QString("S1E7"));
+    QCOMPARE(event->airdate,  (unsigned short) 2015);
+	QVERIFY(!event->HasCredits());
 
     DBEventEIT *event2 = SimpleDBEventEIT (EITFixUp::kFixPremiere,
                                          "Titel",
                                          "Subtitle",
-                                         "Washington, 1971: Vor dem Obersten Gerichtshof wird über die Kriegsdienstverweigerung von Box-Ikone Cassius Clay aka Muhammad Ali verhandelt. Während draußen Tausende gegen den Vietnamkrieg protestieren, verteidigen acht weiße, alte Bundesrichter unter dem Vorsitzenden Warren Burger (Frank Langella) die harte Linie der Regierung Nixon. Doch Kevin Connolly (Benjamin Walker), ein idealistischer junger Mitarbeiter von Richter Harlan (Christopher Plummer), gibt nicht auf. - Muhammad Alis Kiegsdienst-Verweigerungsprozess, als Mix aus Kammerspiel und Archivaufnahmen starbesetzt verfilmt. 94 Min. USA 2012. Von Stephen Frears, mit Danny Glover, Barry Levinson, Bob Balaban. Ab 12 Jahren");
+                                         "Bei einem Bombenanschlag in London kommen  - blabla - atemlosen Agententhriller mit starker Starpower.\u000a\u000a\u000a\u000a 93 Min.\u000aUSA 2015. Von James McTeigue, mit Milla Jovovich, Pierce Brosnan, Dylan McDermott.\u000aAb 16 Jahren");
 
     PRINT_EVENT(*event2);
     fixup.Fix(*event2);
     PRINT_EVENT(*event2);
-    QCOMPARE(event2->description, QString("Washington, 1971: Vor dem Obersten Gerichtshof wird über die Kriegsdienstverweigerung von Box-Ikone Cassius Clay aka Muhammad Ali verhandelt. Während draußen Tausende gegen den Vietnamkrieg protestieren, verteidigen acht weiße, alte Bundesrichter unter dem Vorsitzenden Warren Burger (Frank Langella) die harte Linie der Regierung Nixon. Doch Kevin Connolly (Benjamin Walker), ein idealistischer junger Mitarbeiter von Richter Harlan (Christopher Plummer), gibt nicht auf. - Muhammad Alis Kiegsdienst-Verweigerungsprozess, als Mix aus Kammerspiel und Archivaufnahmen starbesetzt verfilmt. 94 Min. USA 2012. Von Stephen Frears, mit Danny Glover, Barry Levinson, Bob Balaban. Ab 12 Jahren"));
+    QCOMPARE(event2->description, QString("Bei einem Bombenanschlag in London kommen  - blabla - atemlosen Agententhriller mit starker Starpower.\u000a\u000a\u000a\u000a Ab 16 Jahren"));
     QCOMPARE(event2->syndicatedepisodenumber,  QString(""));
+    QCOMPARE(event2->airdate,  (unsigned short) 2015);
+	QVERIFY(event2->HasCredits());
 
     DBEventEIT *event3 = SimpleDBEventEIT (EITFixUp::kFixPremiere,
                                          "Titel",
                                          "Subtitle",
-                                         "50 Min. USA 2008. Von Leslie Libman, mit Rob Morrow, David Krumholtz, Judd Hirsch. Ab 12 Jahren");
+                                         "3. Staffel, Folge 21: Claire Guinness liebt Max ...blabla... ob nicht alles geändert werden sollte.\u000a2013. 20 Min.");
 
     PRINT_EVENT(*event3);
     fixup.Fix(*event3);
     PRINT_EVENT(*event3);
-    QCOMPARE(event3->description, QString("50 Min. USA 2008. Von Leslie Libman, mit Rob Morrow, David Krumholtz, Judd Hirsch. Ab 12 Jahren"));
-    QCOMPARE(event3->syndicatedepisodenumber,  QString(""));
+    QCOMPARE(event3->description, QString("Claire Guinness liebt Max ...blabla... ob nicht alles geändert werden sollte."));
+    QCOMPARE(event3->syndicatedepisodenumber,  QString("S3E21"));
+    QCOMPARE(event3->airdate,  (unsigned short) 2013);
+    QVERIFY(!event3->HasCredits());
+    
+    DBEventEIT *event4 = SimpleDBEventEIT (EITFixUp::kFixPremiere,
+                                         "Titel",
+                                         "Subtitle",
+                                         "2. Staffel, Folge 8: Wieder einmal rückt Weihnachten näher. Frys größter Wunsch ... blabla ... programmierter und gefährlicher Weihnachtsmann herum.\u000aUSA 1999. 25 Min. Von Peter Avanzino.");
+
+    PRINT_EVENT(*event4);
+    fixup.Fix(*event4);
+    PRINT_EVENT(*event4);
+    QCOMPARE(event4->description, QString("Wieder einmal rückt Weihnachten näher. Frys größter Wunsch ... blabla ... programmierter und gefährlicher Weihnachtsmann herum."));
+    QCOMPARE(event4->syndicatedepisodenumber,  QString("S2E8"));
+    QCOMPARE(event4->airdate,  (unsigned short) 1999);
+	QVERIFY(event4->HasCredits());
 
 }
 
