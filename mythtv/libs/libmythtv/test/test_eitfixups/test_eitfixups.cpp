@@ -303,5 +303,32 @@ void TestEITFixups::testSkyEpisodes()
 
 }
 
+void TestEITFixups::testUKLawAndOrder()
+{
+    EITFixUp fixup;
+
+    DBEventEIT *event = SimpleDBEventEIT (EITFixUp::kFixUK,
+                                         "Law & Order: Special Victims Unit",
+                                         "",
+                                         "Crime drama series. Detective Cassidy is accused of raping ...");
+
+    PRINT_EVENT(*event);
+    fixup.Fix(*event);
+    PRINT_EVENT(*event);
+    QCOMPARE(event->title,    QString("Law & Order: Special Victims Unit"));
+    QCOMPARE(event->subtitle, QString(""));
+
+    DBEventEIT *event2 = SimpleDBEventEIT (EITFixUp::kFixUK,
+                                         "Law & Order: Special Victims Unit",
+                                         "",
+                                         "Sugar: New. Police drama series about an elite sex crime  ...");
+
+    PRINT_EVENT(*event2);
+    fixup.Fix(*event2);
+    PRINT_EVENT(*event2);
+    QCOMPARE(event2->title,    QString("Law & Order: Special Victims Unit"));
+    QCOMPARE(event2->subtitle, QString("Sugar"));
+}
+
 QTEST_APPLESS_MAIN(TestEITFixups)
 
