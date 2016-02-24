@@ -2425,7 +2425,7 @@ void PlaybackBox::ShowGroupPopup()
     {
         m_popupMenu->AddItem(tr("Playlist Options"), NULL, createPlaylistMenu());
     }
-    else if (!m_player)
+    if (!m_player)
     {
         if (GetFocusWidget() == m_groupList)
         {
