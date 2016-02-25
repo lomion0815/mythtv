@@ -44,7 +44,8 @@ class TestEITFixups : public QObject
     void testUKFixups9(void);*/
     void testDEPro7Sat1(void);
     void testSkyEpisodes(void);
-    void testUKLawAndOrder(void);
+    void testDeDisneyChannel(void);
+    void testATV(void);
 
   private:
     static DBEventEIT *SimpleDBEventEIT (uint chanid, QString title, QString subtitle, QString description);

@@ -102,8 +102,8 @@ class EITFixUp
     void FixMCA(DBEventEIT &event) const;           // MultiChoice Africa DVB-S
     void FixRTL(DBEventEIT &event) const;           // RTL group DVB
     void FixPRO7(DBEventEIT &event) const;          // Pro7/Sat1 group
-	void FixATV(DBEventEIT &event) const;          // ATV/ATV2
-	void FixDisneyChannel(DBEventEIT &event) const; // Disney Channel
+    void FixATV(DBEventEIT &event) const;          // ATV/ATV2
+    void FixDisneyChannel(DBEventEIT &event) const; // Disney Channel
     void FixFI(DBEventEIT &event) const;            // Finland DVB-T
     void FixPremiere(DBEventEIT &event) const;      // german pay-tv Premiere
     void FixNL(DBEventEIT &event) const;            // Netherlands DVB-C

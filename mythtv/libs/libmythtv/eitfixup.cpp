@@ -58,7 +58,6 @@ EITFixUp::EITFixUp()
       m_ukCompleteDots("^\\.\\.+$"),
       m_ukQuotedSubtitle("(?:^')([\\w\\s\\-,]+)(?:\\.' )"),
       m_ukAllNew("All New To 4Music!\\s?"),
-      m_ukLaONoSplit("^Law & Order: (?:Criminal Intent|LA|Special Victims Unit|Trial by Jury|UK|You the Jury)"),
       m_comHemCountry("^(\\(.+\\))?\\s?([^ ]+)\\s([^\\.0-9]+)"
                       "(?:\\sfrån\\s([0-9]{4}))(?:\\smed\\s([^\\.]+))?\\.?"),
       m_comHemDirector("[Rr]egi"),
@@ -96,13 +95,20 @@ EITFixUp::EITFixUp()
       m_RTLSubtitle3("^(?:Folge\\s)?(\\d{1,4}(?:\\/[IVX]+)?)\\s+(.{,5}[^\\.]{,120})[\\?!\\.]\\s*"),
       m_RTLSubtitle4("^Thema.{0,5}:\\s([^\\.]+)\\.\\s*"),
       m_RTLSubtitle5("^'(.+)'\\.\\s*"),
+      m_PRO7Subtitle(",{0,1}([^,]*),([^,]+)\\s{0,1}(\\d{4})$"),
+      m_DisneyChannelSubtitle(",([^,]+)\\s{0,1}(\\d{4})$"),
+      m_ATVSubtitle(",{0,1}\\sFolge\\s(\\d{1,3})$"),
       m_RTLEpisodeNo1("^(Folge\\s\\d{1,4})\\.*\\s*"),
       m_RTLEpisodeNo2("^(\\d{1,2}\\/[IVX]+)\\.*\\s*"),
       m_fiRerun("\\ ?Uusinta[a-zA-Z\\ ]*\\.?"),
       m_fiRerun2("\\([Uu]\\)"),
-      m_dePremiereInfos("([^.]+)?\\s?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon"
-                        "\\s([^,]+)(?:,|\\su\\.\\sa\\.)\\smit\\s(.+)\\.)?"),
+//      m_dePremiereInfos("([^.]+)?\\s?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon"
+//      m_dePremiereInfos("\\s*[0-9]+\\sMin\\.([^.]+)?\\s?([0-9]{4})\\.(?:\\sVon"
+//                        "\\s([^,]+)(?:,|\\su\\.\\sa\\.)\\smit\\s(.+)\\.)?\\n"),
+      m_dePremiereInfos("[0-9]+\\sMin\\.(?:\\x000a)?([^.]*)\\s([0-9]{4})\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
+      m_dePremiereInfos2("(?:\\x000a)?(?:([^.]*)\\s)?([0-9]{4})\\.\\s[0-9]+\\sMin\\.(?:\\sVon\\s([^,]+)(?:,|\\su\\.\\sa\\.|\\.))?(?:\\smit\\s(.+)\\.)?(?:\\x000a)?"),
       m_dePremiereOTitle("\\s*\\(([^\\)]*)\\)$"),
+      m_deSkyDescriptionSeasonEpisode("^(\\d{1,2}).\\sStaffel,\\sFolge\\s(\\d{1,2}):\\s"),
       m_nlTxt("txt"),
       m_nlWide("breedbeeld"),
       m_nlRepeat("herh."),
@@ -205,6 +211,15 @@ void EITFixUp::Fix(DBEventEIT &event) const
     if (kFixRTL & event.fixup)
         FixRTL(event);
 
+    if (kFixP7S1 & event.fixup)
+        FixPRO7(event);
+
+    if (kFixATV & event.fixup)
+        FixATV(event);		
+
+    if (kFixDisneyChannel & event.fixup)
+        FixDisneyChannel(event);
+		
     if (kFixFI & event.fixup)
         FixFI(event);
 
@@ -810,7 +825,6 @@ void EITFixUp::FixUK(DBEventEIT &event) const
 
     QRegExp tmp24ep = m_uk24ep;
     if (!event.title.startsWith("CSI:") && !event.title.startsWith("CD:") &&
-        !event.title.contains(m_ukLaONoSplit) &&
         !event.title.startsWith("Mission: Impossible"))
     {
         if (((position1=event.title.indexOf(m_ukDoubleDotEnd)) != -1) &&
@@ -1464,6 +1478,56 @@ void EITFixUp::FixMCA(DBEventEIT &event) const
 
 }
 
+/** \fn EITFixUp::FixPRO7(DBEventEIT&) const
+ *  \brief Use this to standardise the PRO7/Sat1 group guide in Germany.
+ */
+void EITFixUp::FixPRO7(DBEventEIT &event) const
+{
+	QRegExp tmp = m_PRO7Subtitle;
+	int pos = tmp.indexIn(event.subtitle);
+ 	if (pos != -1)
+	{
+		if (event.airdate == 0)
+		{
+			event.airdate = tmp.cap(3).toUInt();
+		}
+		event.subtitle.replace(tmp, "");
+	}
+}
+
+/** \fn EITFixUp::FixDisneyChannel(DBEventEIT&) const
+ *  \brief Use this to standardise the Disney Channel guide in Germany.
+ */
+void EITFixUp::FixDisneyChannel(DBEventEIT &event) const
+{
+	QRegExp tmp = m_DisneyChannelSubtitle;
+	int pos = tmp.indexIn(event.subtitle);
+ 	if (pos != -1)
+	{
+		if (event.airdate == 0)
+		{
+			event.airdate = tmp.cap(3).toUInt();
+		}
+		event.subtitle.replace(tmp, "");
+	}
+        tmp = QRegExp("\\s[^\\s]+-(Serie)");
+        pos = tmp.indexIn(event.subtitle);
+        if (pos != -1) 
+        {
+            event.categoryType = ProgramInfo::kCategorySeries;
+            event.category=tmp.cap(0).trimmed();
+            event.subtitle.replace(tmp, "");
+        }
+}
+
+/** \fn EITFixUp::FixATV(DBEventEIT&) const
+ *  \brief Use this to standardise the ATV/ATV2 guide in Germany.
+ */
+void EITFixUp::FixATV(DBEventEIT &event) const
+{
+		event.subtitle.replace(m_ATVSubtitle, "");
+}
+
 /** \fn EITFixUp::FixRTL(DBEventEIT&) const
  *  \brief Use this to standardise the RTL group guide in Germany.
  */
@@ -1622,14 +1686,38 @@ void EITFixUp::FixPremiere(DBEventEIT &event) const
         uint y = tmpInfos.cap(2).toUInt(&ok);
         if (ok)
             event.airdate = y;
-        event.AddPerson(DBPerson::kDirector, tmpInfos.cap(3));
-        const QStringList actors = tmpInfos.cap(4).split(
-            ", ", QString::SkipEmptyParts);
-        QStringList::const_iterator it = actors.begin();
-        for (; it != actors.end(); ++it)
-            event.AddPerson(DBPerson::kActor, *it);
+        if(!tmpInfos.cap(3).isEmpty())
+            event.AddPerson(DBPerson::kDirector, tmpInfos.cap(3));
+        if(!tmpInfos.cap(4).isEmpty())
+        {
+            const QStringList actors = tmpInfos.cap(4).split(
+                ", ", QString::SkipEmptyParts);
+            QStringList::const_iterator it = actors.begin();
+            for (; it != actors.end(); ++it)
+                event.AddPerson(DBPerson::kActor, *it);
+        }
         event.description = event.description.replace(tmpInfos.cap(0), "");
     }
+    tmpInfos =  m_dePremiereInfos2;
+    if (tmpInfos.indexIn(event.description) != -1)
+    {
+        country = tmpInfos.cap(1).trimmed();
+        bool ok;
+        uint y = tmpInfos.cap(2).toUInt(&ok);
+        if (ok)
+            event.airdate = y;
+        if(!tmpInfos.cap(3).isEmpty())
+            event.AddPerson(DBPerson::kDirector, tmpInfos.cap(3));
+        if(!tmpInfos.cap(4).isEmpty())
+        {
+            const QStringList actors = tmpInfos.cap(4).split(
+                ", ", QString::SkipEmptyParts);
+            QStringList::const_iterator it = actors.begin();
+            for (; it != actors.end(); ++it)
+                event.AddPerson(DBPerson::kActor, *it);
+        }
+        event.description = event.description.replace(tmpInfos.cap(0), "");
+    }    
 
     // move the original titel from the title to subtitle
     QRegExp tmpOTitle = m_dePremiereOTitle;
@@ -1637,6 +1725,15 @@ void EITFixUp::FixPremiere(DBEventEIT &event) const
     {
         event.subtitle = QString("%1, %2").arg(tmpOTitle.cap(1)).arg(country);
         event.title = event.title.replace(tmpOTitle.cap(0), "");
+    }
+
+    // Find infos about Season and Episode number 
+    QRegExp tmpSeasonEpisode =  m_deSkyDescriptionSeasonEpisode; 
+    if (tmpSeasonEpisode.indexIn(event.description) != -1) 
+    { 
+        event.syndicatedepisodenumber = QString('S' + tmpSeasonEpisode.cap(1).trimmed()); 
+        event.syndicatedepisodenumber.append(QString('E' + tmpSeasonEpisode.cap(2).trimmed())); 
+        event.description.replace(tmpSeasonEpisode, "");
     }
 }
 
