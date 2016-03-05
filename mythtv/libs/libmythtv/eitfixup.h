@@ -59,8 +59,8 @@ class EITFixUp
         kFixP7S1             = 1 << 26,
         kFixHTML             = 1 << 27,
         kFixUnitymedia       = 1ll << 32,
-        kFixATV              = 1 << 33,
-        kFixDisneyChannel    = 1 << 34,
+        kFixATV              = 1ll << 33,
+        kFixDisneyChannel    = 1ll << 34,
 
         // Early fixups
         kEFixForceISO8859_1  = 1 << 22,
