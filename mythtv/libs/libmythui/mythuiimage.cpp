@@ -93,7 +93,6 @@ void ImageProperties::Copy(const ImageProperties &other)
     preserveAspect = other.preserveAspect;
     isGreyscale = other.isGreyscale;
     isReflected = other.isReflected;
-    isMasked = other.isMasked;
     isOriented = other.isOriented;
 
     reflectAxis = other.reflectAxis;
@@ -106,6 +105,9 @@ void ImageProperties::Copy(const ImageProperties &other)
     isThemeImage = other.isThemeImage;
 
     SetMaskImage(other.maskImage);
+    isMasked = other.isMasked;
+    maskImageFilename = other.maskImageFilename;
+    maskImageFilename.detach();
 }
 
 void ImageProperties::SetMaskImage(MythImage *image)
@@ -357,24 +359,34 @@ class ImageLoader
 
             if (imProps.isMasked)
             {
-                QRect imageArea = image->rect();
-                QRect maskArea = imProps.GetMaskImageRect();
+                MythImage *newMaskImage = painter->GetFormatImage();
+                if (newMaskImage->Load(imProps.GetMaskImageFilename()))
+                    imProps.SetMaskImage(newMaskImage);
+                else
+                    imProps.SetMaskImage(NULL);
+                newMaskImage->DecrRef();
 
-                // Crop the mask to the image
-                int x = 0;
-                int y = 0;
+                if (imProps.isMasked)
+                {
+                    QRect imageArea = image->rect();
+                    QRect maskArea = imProps.GetMaskImageRect();
 
-                if (maskArea.width() > imageArea.width())
-                    x = (maskArea.width() - imageArea.width()) / 2;
+                    // Crop the mask to the image
+                    int x = 0;
+					int y = 0;
 
-                if (maskArea.height() > imageArea.height())
-                    y = (maskArea.height() - imageArea.height()) / 2;
+                    if (maskArea.width() > imageArea.width())
+                        x = (maskArea.width() - imageArea.width()) / 2;
 
-                if (x > 0 || y > 0)
-                    imageArea.translate(x, y);
+                    if (maskArea.height() > imageArea.height())
+                        y = (maskArea.height() - imageArea.height()) / 2;
 
-                QImage mask = imProps.GetMaskImageSubset(imageArea);
-                image->setAlphaChannel(mask.alphaChannel());
+                    if (x > 0 || y > 0)
+                        imageArea.translate(x, y);
+
+                    QImage mask = imProps.GetMaskImageSubset(imageArea);
+                    image->setAlphaChannel(mask.alphaChannel());
+                }
             }
 
             if (!imageReader)
@@ -1439,26 +1451,8 @@ bool MythUIImage::ParseElement(
     }
     else if (element.tagName() == "mask")
     {
-        QString maskfile = getFirstText(element);
-
-        MythImage *newMaskImage = GetPainter()->GetFormatImage();
-        if (newMaskImage->Load(maskfile))
-        {
-            float wmult; // Width multipler
-            float hmult; // Height multipler
-            GetMythUI()->GetScreenSettings(wmult, hmult);
-            if (wmult != 1.0f || hmult != 1.0f)
-            {
-                int width = newMaskImage->size().width() * wmult;
-                int height = newMaskImage->size().height() * hmult;
-                newMaskImage->Resize(QSize(width, height));
-            }
-
-            m_imageProperties.SetMaskImage(newMaskImage);
-        }
-        else
-            m_imageProperties.SetMaskImage(NULL);
-        newMaskImage->DecrRef();
+        m_imageProperties.SetMaskImageFilename(getFirstText(element));
+        m_imageProperties.isMasked = true;
     }
     else if (element.tagName() == "grayscale" ||
              element.tagName() == "greyscale")
