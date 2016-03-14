@@ -107,7 +107,6 @@ void ImageProperties::Copy(const ImageProperties &other)
     SetMaskImage(other.maskImage);
     isMasked = other.isMasked;
     maskImageFilename = other.maskImageFilename;
-    maskImageFilename.detach();
 }
 
 void ImageProperties::SetMaskImage(MythImage *image)
@@ -361,32 +360,41 @@ class ImageLoader
             {
                 MythImage *newMaskImage = painter->GetFormatImage();
                 if (newMaskImage->Load(imProps.GetMaskImageFilename()))
+                {
+                    float wmult; // Width multipler
+                    float hmult; // Height multipler
+                    GetMythUI()->GetScreenSettings(wmult, hmult);
+                    if (wmult != 1.0f || hmult != 1.0f)
+                    {
+                        int width = newMaskImage->size().width() * wmult;
+                        int height = newMaskImage->size().height() * hmult;
+                        newMaskImage->Resize(QSize(width, height));
+                    }
+
                     imProps.SetMaskImage(newMaskImage);
+                }
                 else
                     imProps.SetMaskImage(NULL);
                 newMaskImage->DecrRef();
 
-                if (imProps.isMasked)
-                {
-                    QRect imageArea = image->rect();
-                    QRect maskArea = imProps.GetMaskImageRect();
+                QRect imageArea = image->rect();
+                QRect maskArea = imProps.GetMaskImageRect();
 
-                    // Crop the mask to the image
-                    int x = 0;
-					int y = 0;
+                // Crop the mask to the image
+                int x = 0;
+				int y = 0;
 
-                    if (maskArea.width() > imageArea.width())
-                        x = (maskArea.width() - imageArea.width()) / 2;
+                if (maskArea.width() > imageArea.width())
+                    x = (maskArea.width() - imageArea.width()) / 2;
 
-                    if (maskArea.height() > imageArea.height())
-                        y = (maskArea.height() - imageArea.height()) / 2;
+                if (maskArea.height() > imageArea.height())
+                    y = (maskArea.height() - imageArea.height()) / 2;
 
-                    if (x > 0 || y > 0)
-                        imageArea.translate(x, y);
+                if (x > 0 || y > 0)
+                    imageArea.translate(x, y);
 
-                    QImage mask = imProps.GetMaskImageSubset(imageArea);
-                    image->setAlphaChannel(mask.alphaChannel());
-                }
+                QImage mask = imProps.GetMaskImageSubset(imageArea);
+                image->setAlphaChannel(mask.alphaChannel());
             }
 
             if (!imageReader)
