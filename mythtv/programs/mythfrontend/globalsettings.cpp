@@ -1246,6 +1246,15 @@ PlaybackProfileConfigs::PlaybackProfileConfigs(const QString &str) :
     }
 #endif
 
+#ifdef USING_OPENMAX
+    if (!profiles.contains("OpenMAX Normal"))
+    {
+        VideoDisplayProfile::CreateOpenMAXProfiles(host);
+        profiles = VideoDisplayProfile::GetProfiles(host);
+    }
+#endif
+
+
     QString profile = VideoDisplayProfile::GetDefaultProfileName(host);
     if (!profiles.contains(profile))
     {
@@ -2600,6 +2609,8 @@ static HostComboBox *ThemePainter()
     gc->addSelection(QCoreApplication::translate("(Common)", "Auto", "Automatic"),
                      AUTO_PAINTER);
 #ifdef USING_OPENGL
+    gc->addSelection(QCoreApplication::translate("(Common)", "OpenGL 2"),
+                     OPENGL2_PAINTER);
     gc->addSelection(QCoreApplication::translate("(Common)", "OpenGL 1"),
                      OPENGL_PAINTER);
 #endif
