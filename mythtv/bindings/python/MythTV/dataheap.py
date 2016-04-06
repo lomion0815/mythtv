@@ -325,9 +325,6 @@ class Recorded( CMPRecord, DBDataWrite ):
         return str(self).encode('utf-8')
 
     def __init__(self, data=None, db=None):
-        if data is not None:
-            if None not in data:
-                data = [data[0], datetime.duck(data[1])]
         DBDataWrite.__init__(self, data, db)
 
     def _postinit(self):
