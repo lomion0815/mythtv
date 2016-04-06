@@ -4296,6 +4296,10 @@ void MainServer::HandleGetFreeInputInfo(PlaybackSock *pbs,
             .arg(freeinputs[i].mplexid));
         freeinputs[i].ToStringList(strlist);
     }
+
+    if (strlist.empty())
+        strlist << "OK";
+
     SendResponse(pbssock, strlist);
 }
 
