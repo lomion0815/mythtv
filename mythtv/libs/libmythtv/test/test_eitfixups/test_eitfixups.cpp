@@ -670,7 +670,10 @@ void TestEITFixups::testSkyEpisodes()
     QCOMPARE(event5->airdate,  (unsigned short) 1999);
     QVERIFY(event5->HasCredits());
     delete event5;
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/fixes/0.28
 }
 
 void TestEITFixups::testUnitymedia()

@@ -5339,6 +5339,7 @@ void ProgramInfo::SubstituteMatches(QString &str)
     str.replace(QString("%INETREF%"), inetref);
     str.replace(QString("%PARTNUMBER%"), QString::number(partnumber));
     str.replace(QString("%PARTTOTAL%"), QString::number(parttotal));
+    str.replace(QString("%RECORDEDID%"), QString::number(recordedid));
     str.replace(QString("%ORIGINALAIRDATE%"),
                 originalAirDate.toString(Qt::ISODate));
     static const char *time_str[] =
