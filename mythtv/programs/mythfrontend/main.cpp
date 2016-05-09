@@ -1473,6 +1473,8 @@ static void InitKeys(void)
          "Scroll image down"), "8");
      REG_KEY("Images", "RECENTER", QT_TRANSLATE_NOOP("MythControls",
          "Recenter image"), "5");
+     REG_KEY("Images", "COVER", QT_TRANSLATE_NOOP("MythControls",
+         "Set or clear cover image"), "C");
 }
 
 static void ReloadKeys(void)
@@ -1529,12 +1531,9 @@ static int internal_media_init()
 {
     REG_MEDIAPLAYER("Internal", QT_TRANSLATE_NOOP("MythControls",
         "MythTV's native media player."), internal_play_media);
-
-    REG_MEDIA_HANDLER(
-        QT_TRANSLATE_NOOP("MythControls", "MythDVD DVD Media Handler"),
-        QT_TRANSLATE_NOOP("MythControls", "MythDVD media"),
-        "", handleDVDMedia, MEDIATYPE_DVD, QString::null);
-
+    REG_MEDIA_HANDLER(QT_TRANSLATE_NOOP("MythControls",
+        "MythDVD DVD Media Handler"), "", "", handleDVDMedia,
+        MEDIATYPE_DVD, QString::null);
     REG_MEDIA_HANDLER(QT_TRANSLATE_NOOP("MythControls",
         "MythImage Media Handler 1/2"), "", "", handleGalleryMedia,
         MEDIATYPE_DATA | MEDIATYPE_MIXED, QString::null);
