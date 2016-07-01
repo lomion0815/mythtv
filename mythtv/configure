@@ -6521,17 +6521,26 @@ check_type "vdpau/vdpau.h" "VdpPictureInfoHEVC"
 check_cpp_condition windows.h "!WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP)" && enable winrt || disable winrt
 
 # check for OpenMAX header & lib
-if ! disabled openmax; then
-    check_header 'OMX_Core.h' && enable openmax
+if  enabled openmax ; then
+    openmax_was_enabled=Y
 fi
 if ! disabled openmax; then
-    if check_lib 'OMX_Broadcom.h' OMX_Init -L/opt/vc/lib -lopenmaxil; then
+    test -f /opt/vc/include/IL/OMX_Core.h && enable openmax
+fi
+if ! disabled openmax; then
+    if test -f /opt/vc/include/IL/OMX_Broadcom.h \
+        && test -f /opt/vc/lib/libopenmaxil.so ; then
         enable openmax_broadcom
-    elif check_lib 'bellagio/omxcore.h' OMX_Init -lomxil-bellagio; then
+    elif test -f /usr/include/bellagio/omxcore.h \
+        && test -f /usr/lib/libomxil-bellagio.so; then
         enable openmax_bellagio
     else
         disable openmax
     fi
+fi
+
+if  test "$openmax_was_enabled" = "Y" && disabled openmax ; then
+    die "ERROR - Unable to enable openmax"
 fi
 
 if ! disabled w32threads && ! enabled pthreads; then
@@ -7242,11 +7251,13 @@ int main(void) { return 1; }
 EOF
 
 if enabled systemd_notify ; then
-   if check_pkg_config libsystemd-daemon systemd/sd-daemon.h sd_notify ; then
+    if check_pkg_config libsystemd-daemon systemd/sd-daemon.h sd_notify ; then
         require_pkg_config libsystemd-daemon systemd/sd-daemon.h sd_notify
-   else
+    elif check_pkg_config libsystemd systemd/sd-daemon.h sd_notify ; then
+        require_pkg_config libsystemd systemd/sd-daemon.h sd_notify
+    else
         disable systemd_notify
-   fi
+    fi
 fi
 
 # Check that all MythTV build "requirements" are met:
@@ -7349,7 +7360,7 @@ enabled libass && check_lib2 ass/ass.h ass_flush_events -lass || disable libass
 
 if enabled libcec ; then
     if pkg-config --exists libcec; then
-        libcec_path=`pkg-config --cflags libcec`
+        libcec_path=`pkg-config --variable includedir libcec`
     else
         check_cxx -I"$libcec_path" <<EOF || { disable libcec; }
 #include <libcec/cec.h>
@@ -8028,6 +8039,10 @@ if enabled x11 ; then
   echo "VAAPI support             ${vaapi-no}"
   echo "CrystalHD support         ${crystalhd-no}"
   echo "OpenMAX support           ${openmax-no}"
+  if enabled openmax ; then
+    echo "OpenMAX Broadcom          ${openmax_broadcom-no}"
+    echo "OpenMAX Bellagio          ${openmax_bellagio-no}"
+  fi
 fi
   echo "OpenGL video              ${opengl_video-no}"
   if test x"$target_os" = x"darwin" ; then
