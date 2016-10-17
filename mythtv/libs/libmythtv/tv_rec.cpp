@@ -1421,6 +1421,16 @@ void TVRec::run(void)
             ClearFlags(kFlagExitPlayer, __FILE__, __LINE__);
         }
 
+        if (scanner && HasFlags(kFlagEITScannerRunning) && scanner->rolloverCount() > 0)
+        {
+            LOG(VB_RECORD, LOG_INFO, LOC + "Pausing EIT Scanner");
+            scanner->StopActiveScan();
+            ClearFlags(kFlagEITScannerRunning, __FILE__, __LINE__);
+            eitScanStartTime = MythDate::current();
+            eitScanStartTime = eitScanStartTime.addSecs(10800);
+            TeardownRecorder(kFlagKillRec);
+        }
+
         if (scanner && channel &&
             MythDate::current() > eitScanStartTime)
         {

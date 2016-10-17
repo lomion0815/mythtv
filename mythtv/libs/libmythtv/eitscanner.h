@@ -40,6 +40,8 @@ class EITScanner : public QRunnable
 
     void StopActiveScan(void);
 
+    int rolloverCount() { return activeScanRollover;};
+
   protected:
     void run(void);
 
@@ -59,12 +61,14 @@ class EITScanner : public QRunnable
 
     TVRec           *rec;
     volatile bool    activeScan;
+    int    activeScanRollover;
     volatile bool    activeScanStopped; // protected by lock
     QWaitCondition   activeScanCond; // protected by lock
     QDateTime        activeScanNextTrig;
     uint             activeScanTrigTime;
     QStringList      activeScanChannels;
     QStringList::iterator activeScanNextChan;
+    QStringList::iterator activeScanFirstChan;
 
     uint             cardnum;
 

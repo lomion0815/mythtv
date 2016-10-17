@@ -35,7 +35,7 @@ EITScanner::EITScanner(uint _cardnum)
       exitThread(false),
       rec(NULL),                  activeScan(false),
       activeScanStopped(true),    activeScanTrigTime(0),
-      cardnum(_cardnum)
+      cardnum(_cardnum),    activeScanRollover(-1)
 {
     QStringList langPref = iso639_get_language_list();
     eitHelper->SetLanguagePreferences(langPref);
@@ -129,6 +129,9 @@ void EITScanner::run(void)
 
             if (activeScanNextChan == activeScanChannels.end())
                 activeScanNextChan = activeScanChannels.begin();
+
+            if (activeScanNextChan == activeScanFirstChan)
+                activeScanRollover++;
 
             if (!(*activeScanNextChan).isEmpty())
             {
@@ -240,6 +243,7 @@ void EITScanner::StartActiveScan(TVRec *_rec, uint max_seconds_per_source)
             "      channel.mplexid        IS NOT NULL      AND "
             "      useonairguide        = 1                AND "
             "      useeit               = 1                AND "
+            "      visible              = 1                AND "
             "      channum             != ''               AND "
             "      capturecard.cardid   = :CARDID "
             "GROUP BY mplexid "
@@ -269,7 +273,7 @@ void EITScanner::StartActiveScan(TVRec *_rec, uint max_seconds_per_source)
     if (activeScanChannels.size())
     {
         uint randomStart = random() % activeScanChannels.size();
-        activeScanNextChan = activeScanChannels.begin()+randomStart;
+        activeScanNextChan = activeScanFirstChan = activeScanChannels.begin()+randomStart;
 
         activeScanNextTrig = MythDate::current();
         activeScanTrigTime = max_seconds_per_source;
@@ -278,6 +282,7 @@ void EITScanner::StartActiveScan(TVRec *_rec, uint max_seconds_per_source)
         activeScanTrigTime += random() % 29;
         activeScanStopped = false;
         activeScan = true;
+        activeScanRollover = -1;
     }
 }
 
@@ -287,6 +292,7 @@ void EITScanner::StopActiveScan(void)
 
     activeScanStopped = false;
     activeScan = false;
+    activeScanRollover = -1;
     exitThreadCond.wakeAll();
 
     locker.unlock();
