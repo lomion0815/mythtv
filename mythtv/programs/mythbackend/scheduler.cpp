@@ -1126,7 +1126,12 @@ bool Scheduler::FindNextConflict(
 
         // if two inputs are in the same input group we have a conflict
         // unless the programs are on the same multiplex.
-        if (mplexid_ok)
+        // It is also a conflict if the mplex uses a CA-Module
+        if (mplexid_ok && 
+            p->mplexid != 39 && q->mplexid != 39 &&
+            p->mplexid != 12 && q->mplexid != 12 &&
+            p->mplexid != 6 && q->mplexid != 6 &&
+            p->mplexid != 33 && q->mplexid != 33)
         {
             ++affinity;
             continue;
