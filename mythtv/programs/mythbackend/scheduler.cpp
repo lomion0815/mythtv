@@ -1128,10 +1128,12 @@ bool Scheduler::FindNextConflict(
         // unless the programs are on the same multiplex.
         // It is also a conflict if the mplex uses a CA-Module
         if (mplexid_ok && 
-            p->mplexid != 39 && q->mplexid != 39 &&
-            p->mplexid != 12 && q->mplexid != 12 &&
-            p->mplexid != 6 && q->mplexid != 6 &&
-            p->mplexid != 33 && q->mplexid != 33)
+            p->mplexid != 39 && q->mplexid != 39 && //TID 1007
+            p->mplexid != 11 && q->mplexid != 11 &&  // TID 1115
+            p->mplexid != 12 && q->mplexid != 12 &&  // TID 1117
+            p->mplexid != 6 && q->mplexid != 6 && //TID 1082
+            p->mplexid != 75 && q->mplexid != 75 && // TID 1005
+            p->mplexid != 33 && q->mplexid != 33) // TID 1003
         {
             ++affinity;
             continue;
