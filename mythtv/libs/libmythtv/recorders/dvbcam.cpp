@@ -207,7 +207,7 @@ void DVBCam::HandlePMT(void)
     LOG(VB_DVBCAM, LOG_INFO, LOC + "CiHandler needs CA_PMT");
     QMutexLocker locker(&pmt_lock);
 
-    if (pmt_sent && pmt_added && !pmt_updated)
+/*    if (pmt_sent && pmt_added && !pmt_updated)
     {
         // Send added PMT
         while (PMTAddList.size() > 0)
@@ -234,11 +234,11 @@ void DVBCam::HandlePMT(void)
         PMTList[chan] = pmt;
         PMTAddList.erase(it);
     }
-
+*/
     uint length = PMTList.size();
     uint count  = 0;
 
-    pmt_list_t::const_iterator pmtit;
+/*    pmt_list_t::const_iterator pmtit;
     for (pmtit = PMTList.begin(); pmtit != PMTList.end(); ++pmtit)
     {
         uint cplm = (count     == 0)      ? CPLM_FIRST : CPLM_MORE;
@@ -248,7 +248,9 @@ void DVBCam::HandlePMT(void)
         SendPMT(**pmtit, cplm);
 
         count++;
-    }
+    }*/
+
+    SendPMT(**PMTList.begin(), CPLM_ONLY);
 
     pmt_sent    = true;
     pmt_updated = false;
@@ -288,9 +290,10 @@ void DVBCam::SetPMT(const ChannelBase *chan, const ProgramMapTable *pmt)
 {
     QMutexLocker locker(&pmt_lock);
 
-    pmt_list_t::iterator it = PMTList.find(chan);
-    pmt_list_t::iterator it2 = PMTAddList.find(chan);
-    if (!pmt && (it != PMTList.end()))
+    PMTList.clear();
+    /*pmt_list_t::iterator it = PMTList.begin();
+    //pmt_list_t::iterator it2 = PMTAddList.find(chan);
+    /*if (!pmt && (it != PMTList.end()))
     {
         delete *it;
         PMTList.erase(it);
@@ -302,19 +305,19 @@ void DVBCam::SetPMT(const ChannelBase *chan, const ProgramMapTable *pmt)
         PMTAddList.erase(it2);
         pmt_added = !PMTAddList.empty();
     }
-    else if (pmt && (PMTList.empty() || (it != PMTList.end())))
+    else if (pmt)
     {
         if (it != PMTList.end())
-            delete *it;
+            delete *it;*/
         PMTList[chan] = new ProgramMapTable(*pmt);
         have_pmt    = true;
         pmt_updated = true;
-    }
+    /*}
     else if (pmt && (it == PMTList.end()))
     {
         PMTAddList[chan] = new ProgramMapTable(*pmt);
         pmt_added = true;
-    }
+    }*/
 }
 
 void DVBCam::SetTimeOffset(double offset_in_seconds)
