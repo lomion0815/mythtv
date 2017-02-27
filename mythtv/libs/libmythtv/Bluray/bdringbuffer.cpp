@@ -59,6 +59,7 @@ static int _img_read(void *handle, void *buf, int lba, int num_blocks)
 }
 
 BDInfo::BDInfo(const QString &filename)
+    : m_isValid(true)
 {
     BLURAY* bdnav = NULL;
 
@@ -120,6 +121,7 @@ BDInfo::BDInfo(const QString &filename)
     {
         m_lastError = tr("Could not open Blu-ray device: %1").arg(name);
         LOG(VB_GENERAL, LOG_ERR, QString("BDInfo: ") + m_lastError);
+        m_isValid = false;
     }
     else
     {
@@ -164,7 +166,7 @@ void BDInfo::GetNameAndSerialNum(BLURAY* bdnav,
 
     // Try to find the first clip info file and
     // use its SHA1 hash as a serial number.
-    for (uint32_t idx = 0; idx < 100; idx++)
+    for (uint32_t idx = 0; idx < 200; idx++)
     {
         QString clip = QString("BDMV/CLIPINF/%1.clpi").arg(idx, 5, 10, QChar('0'));
 
@@ -1025,16 +1027,24 @@ double BDRingBuffer::GetFrameRate(void)
 int BDRingBuffer::GetAudioLanguage(uint streamID)
 {
     QMutexLocker locker(&m_infoLock);
-    if (!m_currentTitleInfo ||
-        streamID >= m_currentTitleInfo->clips->audio_stream_count)
-        return iso639_str3_to_key("und");
 
-    uint8_t lang[4] = { 0, 0, 0, 0 };
-    memcpy(lang, m_currentTitleInfo->clips->audio_streams[streamID].lang, 4);
-    int code = iso639_key_to_canonical_key((lang[0]<<16)|(lang[1]<<8)|lang[2]);
+    int code = iso639_str3_to_key("und");
 
-    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Audio Lang: %1 Code: %2")
-                                  .arg(code).arg(iso639_key_to_str3(code)));
+    if (m_currentTitleInfo && m_currentTitleInfo->clip_count > 0)
+    {
+        bd_clip& clip = m_currentTitleInfo->clips[0];
+
+        const BLURAY_STREAM_INFO* stream = FindStream(streamID, clip.audio_streams, clip.audio_stream_count);
+
+        if (stream)
+        {
+            const uint8_t* lang = stream->lang;
+            code = iso639_key_to_canonical_key((lang[0]<<16)|(lang[1]<<8)|lang[2]);
+        }
+    }
+
+    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Audio Lang: 0x%1 Code: %2")
+                                  .arg(code, 3, 16).arg(iso639_key_to_str3(code)));
 
     return code;
 }
@@ -1042,32 +1052,26 @@ int BDRingBuffer::GetAudioLanguage(uint streamID)
 int BDRingBuffer::GetSubtitleLanguage(uint streamID)
 {
     QMutexLocker locker(&m_infoLock);
-    if (!m_currentTitleInfo)
-        return iso639_str3_to_key("und");
 
-    int pgCount = m_currentTitleInfo->clips->pg_stream_count;
-    uint subCount = 0;
-    for (int i = 0; i < pgCount; ++i)
+    int code = iso639_str3_to_key("und");
+
+    if (m_currentTitleInfo && m_currentTitleInfo->clip_count > 0)
     {
-        if (m_currentTitleInfo->clips->pg_streams[i].coding_type >= 0x90 &&
-            m_currentTitleInfo->clips->pg_streams[i].coding_type <= 0x92)
+        bd_clip& clip = m_currentTitleInfo->clips[0];
+
+        const BLURAY_STREAM_INFO* stream = FindStream(streamID, clip.pg_streams, clip.pg_stream_count);
+
+        if (stream)
         {
-            if (streamID == subCount)
-            {
-                uint8_t lang[4] = { 0, 0, 0, 0 };
-                memcpy(lang,
-                       m_currentTitleInfo->clips->pg_streams[streamID].lang, 4);
-                int key = (lang[0]<<16)|(lang[1]<<8)|lang[2];
-                int code = iso639_key_to_canonical_key(key);
-                LOG(VB_GENERAL, LOG_INFO, LOC +
-                        QString("Subtitle Lang: %1 Code: %2")
-                            .arg(code).arg(iso639_key_to_str3(code)));
-                return code;
-            }
-            subCount++;
+            const uint8_t* lang = stream->lang;
+            code = iso639_key_to_canonical_key((lang[0]<<16)|(lang[1]<<8)|lang[2]);
         }
     }
-    return iso639_str3_to_key("und");
+
+    LOG(VB_GENERAL, LOG_INFO, LOC + QString("Subtitle Lang: 0x%1 Code: %2")
+                                  .arg(code, 3, 16).arg(iso639_key_to_str3(code)));
+
+    return code;
 }
 
 void BDRingBuffer::PressButton(int32_t key, int64_t pts)
@@ -1271,6 +1275,48 @@ void BDRingBuffer::HandleBDEvent(BD_EVENT &ev)
 bool BDRingBuffer::IsInStillFrame(void) const
 {
     return m_stillTime > 0 && m_stillMode != BLURAY_STILL_NONE;
+}
+
+/**
+ * \brief Find the stream with the given ID from an array of streams.
+ * \param streamid      The stream ID (pid) to look for
+ * \param streams       Pointer to an array of streams
+ * \param streamCount   Number of streams in the array
+ * \return Pointer to the matching stream if found, otherwise nullptr.
+ */
+const BLURAY_STREAM_INFO* BDRingBuffer::FindStream(int streamid, BLURAY_STREAM_INFO* streams, int streamCount) const
+{
+    const BLURAY_STREAM_INFO* stream = nullptr;
+
+    for(int i = 0; i < streamCount && !stream; i++)
+    {
+        if (streams[i].pid == streamid)
+            stream = &streams[i];
+    }
+
+    return stream;
+}
+
+bool BDRingBuffer::IsValidStream(int streamid)
+{
+    bool valid = false;
+
+    if (m_currentTitleInfo && m_currentTitleInfo->clip_count > 0)
+    {
+        bd_clip& clip = m_currentTitleInfo->clips[0];
+        if( FindStream(streamid,clip.audio_streams,     clip.audio_stream_count) ||
+            FindStream(streamid,clip.video_streams,     clip.video_stream_count) ||
+            FindStream(streamid,clip.ig_streams,        clip.ig_stream_count) ||
+            FindStream(streamid,clip.pg_streams,        clip.pg_stream_count) ||
+            FindStream(streamid,clip.sec_audio_streams, clip.sec_audio_stream_count) ||
+            FindStream(streamid,clip.sec_video_streams, clip.sec_video_stream_count)
+          )
+        {
+            valid = true;
+        }
+    }
+
+    return valid;
 }
 
 void BDRingBuffer::WaitForPlayer(void)

@@ -22,7 +22,7 @@ class MTV_PUBLIC BDInfo
   public:
     BDInfo(const QString &filename);
    ~BDInfo(void);
-    bool IsValid(void) const { return !m_serialnumber.isEmpty(); }
+    bool IsValid(void) const { return m_isValid; }
     bool GetNameAndSerialNum(QString &name, QString &serialnum);
     QString GetLastError(void) const { return m_lastError; }
 
@@ -37,6 +37,7 @@ protected:
     QString     m_name;
     QString     m_serialnumber;
     QString     m_lastError;
+    bool        m_isValid;
 };
 
 /** \class BDRingBufferPriv
@@ -114,6 +115,7 @@ class MTV_PUBLIC BDRingBuffer : public RingBuffer
     virtual bool IsInMenu(void) const { return m_inMenu; }
     virtual bool IsInStillFrame(void) const;
     bool TitleChanged(void);
+    bool IsValidStream(int streamid);
 
     void GetDescForPos(QString &desc);
     double GetFrameRate(void);
@@ -154,6 +156,8 @@ class MTV_PUBLIC BDRingBuffer : public RingBuffer
     // private bluray event handling
     bool HandleBDEvents(void);
     void HandleBDEvent(BD_EVENT &event);
+
+    const BLURAY_STREAM_INFO* FindStream(int streamid, BLURAY_STREAM_INFO* streams, int streamCount) const;
 
     BLURAY            *bdnav;
     bool               m_isHDMVNavigation;

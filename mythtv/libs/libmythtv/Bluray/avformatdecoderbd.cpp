@@ -12,6 +12,14 @@ AvFormatDecoderBD::AvFormatDecoderBD(
 {
 }
 
+bool AvFormatDecoderBD::IsValidStream(int streamid)
+{
+    if (ringBuffer && ringBuffer->IsBD())
+        return ringBuffer->BD()->IsValidStream(streamid);
+    else
+        return AvFormatDecoder::IsValidStream(streamid);
+}
+
 void AvFormatDecoderBD::Reset(bool reset_video_data, bool seek_reset, bool reset_file)
 {
     AvFormatDecoder::Reset(reset_video_data, seek_reset, reset_file);
@@ -64,17 +72,27 @@ void AvFormatDecoderBD::StreamChangeCheck(void)
 int AvFormatDecoderBD::GetSubtitleLanguage(uint subtitle_index,
                                            uint stream_index)
 {
-    (void)stream_index;
-    if (ringBuffer && ringBuffer->IsBD())
-        return ringBuffer->BD()->GetSubtitleLanguage(subtitle_index);
+    (void)subtitle_index;
+    if (ringBuffer && ringBuffer->IsBD() &&
+        stream_index < ic->nb_streams &&
+        ic->streams[stream_index] != nullptr)
+    {
+        return ringBuffer->BD()->GetSubtitleLanguage(ic->streams[stream_index]->id);
+    }
+
     return iso639_str3_to_key("und");
 }
 
 int AvFormatDecoderBD::GetAudioLanguage(uint audio_index, uint stream_index)
 {
-    (void)stream_index;
-    if (ringBuffer && ringBuffer->IsBD())
-        return ringBuffer->BD()->GetAudioLanguage(audio_index);
+    (void)audio_index;
+    if (ringBuffer && ringBuffer->IsBD() &&
+        stream_index < ic->nb_streams &&
+        ic->streams[stream_index] != nullptr)
+    {
+        return ringBuffer->BD()->GetAudioLanguage(ic->streams[stream_index]->id);
+    }
+
     return iso639_str3_to_key("und");
 }
 
