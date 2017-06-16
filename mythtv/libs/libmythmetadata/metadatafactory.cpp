@@ -116,18 +116,24 @@ void MetadataFactory::Lookup(ProgramInfo *pginfo, bool automatic,
     if (!pginfo)
         return;
 
+    LookupType type = GuessLookupType(pginfo);
+    QString subtitle = pginfo->GetSubtitle();
+
+    if ((type == kProbableTelevision || type == kProbableGenericTelevision) && subtitle.isEmpty())
+        subtitle = pginfo->GetDescription();
+
     MetadataLookup *lookup = new MetadataLookup();
 
     lookup->SetStep(kLookupSearch);
     lookup->SetType(kMetadataRecording);
-    lookup->SetSubtype(GuessLookupType(pginfo));
+    lookup->SetSubtype(type);
     lookup->SetData(qVariantFromValue(pginfo));
     lookup->SetAutomatic(automatic);
     lookup->SetHandleImages(getimages);
     lookup->SetAllowGeneric(allowgeneric);
     lookup->SetHost(gCoreContext->GetMasterHostName());
     lookup->SetTitle(pginfo->GetTitle());
-    lookup->SetSubtitle(pginfo->GetSubtitle());
+    lookup->SetSubtitle(subtitle);
     lookup->SetSeason(pginfo->GetSeason());
     lookup->SetEpisode(pginfo->GetEpisode());
     lookup->SetInetref(pginfo->GetInetRef());
