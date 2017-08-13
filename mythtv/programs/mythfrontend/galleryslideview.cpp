@@ -405,6 +405,8 @@ void GallerySlideView::Close()
     if (im)
         emit ImageSelected(im->m_id);
 
+    GetMythUI()->RestoreScreensaver();
+
     MythScreenType::Close();
 }
 
@@ -417,6 +419,7 @@ void GallerySlideView::Stop()
     m_playing = false;
     m_timer.stop();
     SetStatus(tr("Stopped"));
+    GetMythUI()->RestoreScreensaver();
 }
 
 
@@ -432,6 +435,7 @@ void GallerySlideView::Play(bool useTransition)
     if (!m_suspended)
         m_timer.start();
     SetStatus(tr("Playing"), true);
+    GetMythUI()->DisableScreensaver();
 }
 
 
