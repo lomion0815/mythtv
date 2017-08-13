@@ -1441,7 +1441,7 @@ void TVRec::run(void)
             scanner->StopActiveScan();
             ClearFlags(kFlagEITScannerRunning, __FILE__, __LINE__);
             eitScanStartTime = MythDate::current();
-            eitScanStartTime = eitScanStartTime.addSecs(10800);
+            eitScanStartTime = eitScanStartTime.addSecs(21600);
             // shut down signal monitoring
             TeardownSignalMonitor();
             ClearFlags(kFlagSignalMonitorRunning, __FILE__, __LINE__);
