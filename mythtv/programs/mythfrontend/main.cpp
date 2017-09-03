@@ -1767,6 +1767,10 @@ int main(int argc, char **argv)
     bool bPromptForBackend    = false;
     bool bBypassAutoDiscovery = false;
 
+#if CONFIG_OMX_RPI
+    setenv("QT_XCB_GL_INTEGRATION","none",0);
+#endif
+
 #ifdef Q_OS_ANDROID
     // extra for 0 termination
     char *newargv[argc+4+1];
@@ -1973,9 +1977,9 @@ int main(int argc, char **argv)
 
     MythMainWindow *mainWindow = GetMythMainWindow();
 #if CONFIG_DARWIN
-    mainWindow->Init(QT_PAINTER);
+    mainWindow->Init(QT_PAINTER, false);
 #else
-    mainWindow->Init();
+    mainWindow->Init(QString(), false);
 #endif
     mainWindow->setWindowTitle(qApp->translate("(MythFrontendMain)",
                                                "MythTV Frontend",
