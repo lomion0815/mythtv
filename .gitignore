@@ -39,3 +39,4 @@ bin
 .directory
 .vscode
 .qmake.stash
+*.patch
