@@ -55,10 +55,16 @@ Banner:http://thetvdb.com/banners/graphical/80159-g4.jpg,http://thetvdb.com/bann
     <certifications>
       <certification locale="us" name="TV-PG"/>
     </certifications>
+    <categories>
+      <category type="genre" name="Action"/>
+      <category type="genre" name="Adventure"/>
+      <category type="genre" name="Fantasy"/>
+      <category type="genre" name="Science-Fiction"/>
+    </categories>
     <studios>
       <studio name="Syfy"/>
     </studios>
-    <runtime/>
+    <runtime>45</runtime>
     <inetref>72449</inetref>
     <collectionref>72449</collectionref>
     <imdb>0118480</imdb>
@@ -134,10 +140,15 @@ Banner:http://thetvdb.com/banners/graphical/73739-g4.jpg,http://thetvdb.com/bann
     <certifications>
       <certification locale="us" name="TV-14"/>
     </certifications>
+    <categories>
+      <category type="genre" name="Drama"/>
+      <category type="genre" name="Science-Fiction"/>
+      <category type="genre" name="Thriller"/>
+    </categories>
     <studios>
       <studio name="CBS"/>
     </studios>
-    <runtime/>
+    <runtime>45</runtime>
     <inetref>83066</inetref>
     <collectionref>83066</collectionref>
     <imdb>1118697</imdb>
@@ -194,10 +205,17 @@ Banner:http://thetvdb.com/banners/graphical/73739-g4.jpg,http://thetvdb.com/bann
     <certifications>
       <certification locale="us" name="TV-PG"/>
     </certifications>
+    <categories>
+      <category type="genre" name="Action"/>
+      <category type="genre" name="Adventure"/>
+      <category type="genre" name="Crime"/>
+      <category type="genre" name="Mystery"/>
+      <category type="genre" name="Science-Fiction"/>
+    </categories>
     <studios>
       <studio name="Space"/>
     </studios>
-    <runtime/>
+    <runtime>60</runtime>
     <inetref>80159</inetref>
     <collectionref>80159</collectionref>
     <imdb>0965394</imdb>
@@ -414,6 +432,13 @@ Banner:http://thetvdb.com/banners/graphical/73739-g4.jpg,http://thetvdb.com/bann
     <certifications>
       <certification locale="us" name="TV-PG"/>
     </certifications>
+    <categories>
+      <category type="genre" name="Action"/>
+      <category type="genre" name="Adventure"/>
+      <category type="genre" name="Crime"/>
+      <category type="genre" name="Mystery"/>
+      <category type="genre" name="Science-Fiction"/>
+    </categories>
     <studios>
       <studio name="Space"/>
     </studios>
@@ -456,7 +481,7 @@ Airedseasonid:583817
 Dvddiscid:
 Id:5463514
 Imdbid:
-Lastupdated:1451954464
+Lastupdated:...
 Lastupdatedby:447800
 Productioncode:
 Seriesid:281053
@@ -464,7 +489,7 @@ Showurl:
 Siterating:0
 Siteratingcount:0
 Thumbadded:
-Thumbauthor:1
+Thumbauthor:...
 Cast:Chip Gaines, Joanna Gaines
 Runtime:45
 Title:Fixer Upper
@@ -487,10 +512,16 @@ Banner:http://thetvdb.com/banners/graphical/281053-g2.jpg,http://thetvdb.com/ban
     <certifications>
       <certification locale="us" name="TV-14"/>
     </certifications>
+    <categories>
+      <category type="genre" name="Action"/>
+      <category type="genre" name="Adventure"/>
+      <category type="genre" name="Crime"/>
+      <category type="genre" name="Drama"/>
+    </categories>
     <studios>
       <studio name="CBS"/>
     </studios>
-    <runtime/>
+    <runtime>45</runtime>
     <inetref>72108</inetref>
     <collectionref>72108</collectionref>
     <tmsref>EP00681911</tmsref>
@@ -553,10 +584,14 @@ Banner:http://thetvdb.com/banners/graphical/281053-g2.jpg,http://thetvdb.com/ban
     <certifications>
       <certification locale="us" name="TV-G"/>
     </certifications>
+    <categories>
+      <category type="genre" name="Family"/>
+      <category type="genre" name="Special Interest"/>
+    </categories>
     <studios>
       <studio name="ABC (US)"/>
     </studios>
-    <runtime/>
+    <runtime>30</runtime>
     <inetref>283661</inetref>
     <collectionref>283661</collectionref>
     <imdb>3062384</imdb>
@@ -568,6 +603,78 @@ Banner:http://thetvdb.com/banners/graphical/281053-g2.jpg,http://thetvdb.com/ban
       <image type="screenshot" url="http://thetvdb.com/banners/episodes/283661/6050716.jpg" thumb="http://thetvdb.com/banners/_cache/episodes/283661/6050716.jpg"/>
       <image type="coverart" url="http://www.thetvdb.com/banners/posters/283661-1.jpg" thumb="http://www.thetvdb.com/banners/_cache/posters/283661-1.jpg" width="680" height="1000"/>
       <image type="fanart" url="http://www.thetvdb.com/banners/fanart/original/283661-1.jpg" thumb="http://www.thetvdb.com/banners/_cache/fanart/original/283661-1.jpg" width="1920" height="1080"/>
+    </images>
+  </item>
+</metadata>
+0
+
+>>> sys.argv = shlex.split('ttvdb.py -l en -a US -N 76119 "Eclipse Over America"')
+>>> main()
+<?xml version='1.0' encoding='UTF-8'?>
+<metadata>
+  <item>
+    <title>NOVA</title>
+    <subtitle>Eclipse Over America</subtitle>
+    <description>On August 21, 2017, millions of Americans witnessed the first total solar eclipse to cross the continental United States in 99 years. As in all total solar eclipses, the moon blocked the sun and revealed its ethereal outer atmosphere – its corona – in a wondrous celestial spectacle. While hordes of citizens flocked to the eclipse’s path of totality, scientists, too, staked out spots for a very different reason: to investigate the secrets of the sun’s elusive atmosphere. During the eclipse’s precious seconds of darkness, they gathered new clues on how our sun works, how it can produce deadly solar storms, and why its atmosphere is so hot. NOVA investigates the storied history of solar eclipse science, and joins both seasoned and citizen-scientists alike as they don their eclipse glasses, tune their telescopes, and behold the Eclipse Over America.</description>
+    <season>44</season>
+    <episode>11</episode>
+    <certifications>
+      <certification locale="us" name="TV-PG"/>
+    </certifications>
+    <categories>
+      <category type="genre" name="Documentary"/>
+    </categories>
+    <studios>
+      <studio name="PBS"/>
+    </studios>
+    <runtime>60</runtime>
+    <inetref>76119</inetref>
+    <collectionref>76119</collectionref>
+    <imdb>0206501</imdb>
+    <tmsref>EP00003163</tmsref>
+    <language>en</language>
+    <year>2017</year>
+    <releasedate>2017-08-21</releasedate>
+    <people>
+      <person job="Guest Star" name="Craig Sechler"/>
+      <person job="Director" name="Martin Gorst"/>
+    </people>
+    <images>
+      <image type="screenshot" url="http://thetvdb.com/banners/episodes/76119/6286436.jpg" thumb="http://thetvdb.com/banners/_cache/episodes/76119/6286436.jpg"/>
+      <image type="coverart" url="http://www.thetvdb.com/banners/seasons/76119-44.jpg" thumb="http://www.thetvdb.com/banners/_cache/seasons/76119-44.jpg"/>
+      <image type="coverart" url="http://www.thetvdb.com/banners/seasons/76119-44-2.jpg" thumb="http://www.thetvdb.com/banners/_cache/seasons/76119-44-2.jpg"/>
+      <image type="fanart" url="http://www.thetvdb.com/banners/fanart/original/76119-1.jpg" thumb="http://www.thetvdb.com/banners/_cache/fanart/original/76119-1.jpg" width="1920" height="1080"/>
+      <image type="fanart" url="http://www.thetvdb.com/banners/fanart/original/76119-2.jpg" thumb="http://www.thetvdb.com/banners/_cache/fanart/original/76119-2.jpg" width="1920" height="1080"/>
+      <image type="fanart" url="http://www.thetvdb.com/banners/fanart/original/76119-3.jpg" thumb="http://www.thetvdb.com/banners/_cache/fanart/original/76119-3.jpg" width="1280" height="720"/>
+    </images>
+  </item>
+</metadata>
+0
+
+>>> sys.argv = shlex.split('ttvdb.py -l en -a GB -C 330432')
+>>> main()
+<?xml version='1.0' encoding='UTF-8'?>
+<metadata>
+  <item>
+    <language>en</language>
+    <title>Nine Minute Ninja</title>
+    <network>CBBC</network>
+    <description>Art Ninja spinoff. Ricky makes art in nine minutes.</description>
+    <categories>
+      <category type="genre" name="Children"/>
+    </categories>
+    <studios>
+      <studio name="CBBC"/>
+    </studios>
+    <runtime>10</runtime>
+    <inetref>330432</inetref>
+    <ratingcount>0</ratingcount>
+    <year>2015</year>
+    <releasedate>2015-06-24</releasedate>
+    <lastupdated>...</lastupdated>
+    <status>Continuing</status>
+    <images>
+      <image type="coverart" url="http://www.thetvdb.com/banners/posters/330432-1.jpg" thumb="http://www.thetvdb.com/banners/_cache/posters/330432-1.jpg"/>
     </images>
   </item>
 </metadata>
