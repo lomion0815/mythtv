@@ -1553,6 +1553,7 @@ void RecordingInfo::SubstituteMatches(QString &str)
     str.replace("%RECSTATUS%", QString::number(recstatus));
     str.replace("%RECTYPE%", QString::number(rectype));
     str.replace("%REACTIVATE%", IsReactivated() ? "1" : "0");
+    str.replace("%RECORDEDID%", QString::number(recordedid));
 
     ProgramInfo::SubstituteMatches(str);
 }
