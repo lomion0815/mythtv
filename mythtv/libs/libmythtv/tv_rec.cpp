@@ -2066,7 +2066,8 @@ bool TVRec::SetupSignalMonitor(bool tablemon, bool EITscan, bool notify)
     SignalMonitorValue::Init();
 
     if (SignalMonitor::IsSupported(genOpt.inputtype) && channel->Open())
-        signalMonitor = SignalMonitor::Init(genOpt.inputtype, inputid, channel);
+        signalMonitor = SignalMonitor::Init(genOpt.inputtype, inputid,
+                                            channel, false);
 
     if (signalMonitor)
     {
