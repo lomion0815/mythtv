@@ -68,8 +68,7 @@ class EITScanner : public QRunnable
     uint             activeScanTrigTime;
     QStringList      activeScanChannels;
     QStringList::iterator activeScanNextChan;
-    QStringList::iterator activeScanFirstChan;
-
+    uint             activeScanNextChanIndex;
     uint             cardnum;
 
     static QMutex    resched_lock;

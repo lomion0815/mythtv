@@ -35,7 +35,8 @@ EITScanner::EITScanner(uint _cardnum)
       exitThread(false),
       rec(NULL),                  activeScan(false),
       activeScanStopped(true),    activeScanTrigTime(0),
-      cardnum(_cardnum),    activeScanRollover(-1)
+      activeScanNextChanIndex(random()),
+      cardnum(_cardnum)
 {
     QStringList langPref = iso639_get_language_list();
     eitHelper->SetLanguagePreferences(langPref);
@@ -128,10 +129,10 @@ void EITScanner::run(void)
             }
 
             if (activeScanNextChan == activeScanChannels.end())
+            {
                 activeScanNextChan = activeScanChannels.begin();
-
-            if (activeScanNextChan == activeScanFirstChan)
-                activeScanRollover++;
+                activeScanNextChanIndex = 0;
+            }
 
             if (!(*activeScanNextChan).isEmpty())
             {
@@ -149,7 +150,12 @@ void EITScanner::run(void)
 
             activeScanNextTrig = MythDate::current()
                 .addSecs(activeScanTrigTime);
-            ++activeScanNextChan;
+            if (activeScanChannels.size())
+            {
+                ++activeScanNextChan;
+                activeScanNextChanIndex =
+                    (activeScanNextChanIndex+1) % activeScanChannels.size();
+            }
 
             // 24 hours ago
             eitHelper->PruneEITCache(activeScanNextTrig.toTime_t() - 86400);
@@ -241,6 +247,7 @@ void EITScanner::StartActiveScan(TVRec *_rec, uint max_seconds_per_source)
             "WHERE capturecard.sourceid = channel.sourceid AND "
             "      videosource.sourceid = channel.sourceid AND "
             "      channel.mplexid        IS NOT NULL      AND "
+            "      visible              = 1                AND "
             "      useonairguide        = 1                AND "
             "      useeit               = 1                AND "
             "      visible              = 1                AND "
@@ -272,8 +279,14 @@ void EITScanner::StartActiveScan(TVRec *_rec, uint max_seconds_per_source)
     // order when the backend is first started up.
     if (activeScanChannels.size())
     {
-        uint randomStart = random() % activeScanChannels.size();
-        activeScanNextChan = activeScanFirstChan = activeScanChannels.begin()+randomStart;
+        // The start channel is random.  From now on, start on the
+        // next channel.  This makes sure the immediately following
+        // channels get scanned in a timely manner if we keep erroring
+        // out on the previous channel.
+        activeScanNextChanIndex =
+            (activeScanNextChanIndex+1) % activeScanChannels.size();
+        activeScanNextChan =
+            activeScanChannels.begin() + activeScanNextChanIndex;
 
         activeScanNextTrig = MythDate::current();
         activeScanTrigTime = max_seconds_per_source;
@@ -282,7 +295,6 @@ void EITScanner::StartActiveScan(TVRec *_rec, uint max_seconds_per_source)
         activeScanTrigTime += random() % 29;
         activeScanStopped = false;
         activeScan = true;
-        activeScanRollover = -1;
     }
 }
 
@@ -292,7 +304,6 @@ void EITScanner::StopActiveScan(void)
 
     activeScanStopped = false;
     activeScan = false;
-    activeScanRollover = -1;
     exitThreadCond.wakeAll();
 
     locker.unlock();
