@@ -40,6 +40,8 @@ class EITScanner : public QRunnable
 
     void StopActiveScan(void);
 
+    int rolloverCount() { return activeScanRollover;};
+
   protected:
     void run(void);
 
@@ -68,6 +70,8 @@ class EITScanner : public QRunnable
     uint             activeScanNextChanIndex;
 
     uint             cardnum;
+    int    activeScanRollover;
+    QStringList::iterator activeScanFirstChan;
 
     static QMutex    resched_lock;
     static QDateTime resched_next_time;

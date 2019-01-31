@@ -36,7 +36,7 @@ EITScanner::EITScanner(uint _cardnum)
       rec(NULL),                  activeScan(false),
       activeScanStopped(true),    activeScanTrigTime(0),
       activeScanNextChanIndex(random()),
-      cardnum(_cardnum)
+      cardnum(_cardnum),    activeScanRollover(-1)
 {
     QStringList langPref = iso639_get_language_list();
     eitHelper->SetLanguagePreferences(langPref);
@@ -133,6 +133,9 @@ void EITScanner::run(void)
                 activeScanNextChan = activeScanChannels.begin();
                 activeScanNextChanIndex = 0;
             }
+
+            if (activeScanNextChan == activeScanFirstChan)
+                activeScanRollover++;
 
             if (!(*activeScanNextChan).isEmpty())
             {
@@ -284,7 +287,7 @@ void EITScanner::StartActiveScan(TVRec *_rec, uint max_seconds_per_source)
         // out on the previous channel.
         activeScanNextChanIndex =
             (activeScanNextChanIndex+1) % activeScanChannels.size();
-        activeScanNextChan =
+        activeScanNextChan = activeScanFirstChan = 
             activeScanChannels.begin() + activeScanNextChanIndex;
 
         activeScanNextTrig = MythDate::current();
@@ -303,6 +306,7 @@ void EITScanner::StopActiveScan(void)
 
     activeScanStopped = false;
     activeScan = false;
+    activeScanRollover = -1;
     exitThreadCond.wakeAll();
 
     locker.unlock();
