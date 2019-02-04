@@ -3638,9 +3638,9 @@ void TVRec::TuningShutdowns(const TuningRequest &request)
         }
         // At this point the recorders are shut down
 
-        CloseChannel();
-        // At this point the channel is shut down
     }
+    CloseChannel();
+    // At this point the channel is shut down
 
     if (ringBuffer && (request.flags & kFlagKillRingBuffer))
     {
