@@ -73,8 +73,8 @@ QString MythExternRecApp::Desc(void) const
 {
     QString extra;
 
-    if (m_proc.processId() > 0)
-        extra = QString("(pid %1) ").arg(m_proc.processId());
+    if (m_proc.pid() > 0)
+        extra = QString("(pid %1) ").arg(m_proc.pid());
 
     return QString("%1%2 ").arg(extra).arg(m_desc);
 }
@@ -475,7 +475,7 @@ Q_SLOT void MythExternRecApp::StartStreaming(const QString & serial)
     }
 
     LOG(VB_RECORD, LOG_INFO, LOC + QString(": Started process '%1' PID %2")
-        .arg(m_proc.program()).arg(m_proc.processId()));
+        .arg(m_proc.program()).arg(m_proc.pid()));
 
     emit Streaming(true);
     emit SetDescription(Desc());
@@ -544,7 +544,7 @@ Q_SLOT void MythExternRecApp::ProcStateChanged(QProcess::ProcessState newState)
           msg += "Starting ";
           break;
         case QProcess::Running:
-          msg += QString("Running PID %1").arg(m_proc.processId());
+          msg += QString("Running PID %1").arg(m_proc.pid());
           break;
     }
 
